@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../common/widgets/button.dart';
+import '../../../common/widgets/buttons.dart';
 
 class LandingScreen extends StatelessWidget {
   const LandingScreen({super.key});
@@ -42,7 +42,7 @@ class LandingScreen extends StatelessWidget {
                 context,
                 text: 'Get Started',
                 onPressed: () {
-
+                  Navigator.pushNamed(context, '/login');
                 },
               ),
             ],

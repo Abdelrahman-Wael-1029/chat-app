@@ -10,6 +10,8 @@ ThemeData lightTheme = ThemeData(
     onBackground: LightColors.textColor,
     primary: LightColors.primaryColor,
     brightness: Brightness.light,
+    secondary: LightColors.secondaryColor,
+    tertiary: LightColors.tertiaryColor,
 
   ),
   appBarTheme: AppBarTheme(
@@ -50,6 +52,8 @@ ThemeData darkTheme = ThemeData(
     onBackground: DarkColors.textColor,
     primary: DarkColors.primaryColor,
     brightness: Brightness.light,
+    secondary: DarkColors.secondaryColor,
+    tertiary: DarkColors.tertiaryColor,
 
   ),
   appBarTheme: AppBarTheme(
@@ -78,6 +82,4 @@ ThemeData darkTheme = ThemeData(
     labelColor: DarkColors.tabColor,
     unselectedLabelColor: DarkColors.unSelectedTabColor,
   ),
-
-
 );
