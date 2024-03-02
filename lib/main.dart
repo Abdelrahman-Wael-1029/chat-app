@@ -1,3 +1,4 @@
+import 'package:chat_app/features/landing/screens/landing_screen.dart';
 import 'package:chat_app/screens/home_layout.dart';
 import 'package:chat_app/styles/theme.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -27,7 +28,7 @@ class MyApp extends StatelessWidget {
       theme: lightTheme,
       darkTheme: darkTheme,
       themeMode: ThemeMode.system,
-      home: HomeScreen(),
+      home: const LandingScreen(),
       debugShowCheckedModeBanner: false,
     );
   }
