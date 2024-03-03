@@ -3,8 +3,9 @@ import 'package:chat_app/features/landing/screens/landing_screen.dart';
 import 'package:chat_app/screens/home_layout.dart';
 import 'package:flutter/material.dart';
 
-import 'auth/screens/login.dart';
-import 'auth/screens/otp.dart';
+import 'features/auth/screens/login.dart';
+import 'features/auth/screens/otp.dart';
+
 
 class Routers {
   Route generateRoute(RouteSettings settings) {

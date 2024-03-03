@@ -1,20 +1,30 @@
 import 'package:chat_app/common/widgets/buttons.dart';
+import 'package:chat_app/features/auth/controller/auth_controller.dart';
 import 'package:country_picker/country_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../common/utils/country_picker.dart';
+import '../../../common/utils/country_picker.dart';
 
-class LoginScreen extends StatefulWidget {
+class LoginScreen extends ConsumerStatefulWidget {
   static const String route = '/login';
 
   const LoginScreen({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  ConsumerState<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _LoginScreenState extends ConsumerState<LoginScreen> {
   String? countryCode;
+  var phoneController = TextEditingController();
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    phoneController.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -49,31 +59,6 @@ class _LoginScreenState extends State<LoginScreen> {
                         },
                         labelText: 'Search',
                       );
-                      /*showCountryPicker(
-                        context: context,
-                        countryListTheme: CountryListThemeData(
-                          backgroundColor: Theme.of(context).colorScheme.background,
-                          textStyle: Theme.of(context).textTheme.bodyMedium,
-                          inputDecoration: InputDecoration(
-                            labelText: 'Search',
-                            labelStyle: Theme.of(context).textTheme.labelLarge,
-                            prefixIconColor: Theme.of(context).colorScheme.onBackground,
-                            prefixIcon: const Icon(Icons.search,
-                            ),
-                            border: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                color: const Color(0xFF8C98A8).withOpacity(0.2),
-                              ),
-                            ),
-                          ),
-                        ),
-                        showPhoneCode: true,
-                        onSelect: (country) {
-                          setState(() {
-                            countryCode = country.phoneCode;
-                          });
-                        },
-                      );*/
                     },
                   ),
                   Row(
@@ -84,6 +69,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                       Expanded(
                         child: TextField(
+                          controller: phoneController,
                           decoration: InputDecoration(
                             hintText: "Phone number",
                             hintStyle: Theme.of(context)
@@ -100,7 +86,12 @@ class _LoginScreenState extends State<LoginScreen> {
                   )
                 ],
               ),
-              defaultEvaluationButton(context, text: "NEXT", onPressed: () {}),
+              defaultEvaluationButton(context, text: "NEXT", onPressed: () {
+                if (countryCode != null && phoneController.text.isNotEmpty) {
+                  ref.read(authControllerProvider).signInWithPhone(
+                      context, "+$countryCode${phoneController.text}");
+                }
+              }),
             ],
           ),
         ),

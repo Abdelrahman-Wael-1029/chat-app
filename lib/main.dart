@@ -1,9 +1,9 @@
 import 'package:chat_app/features/landing/screens/landing_screen.dart';
 import 'package:chat_app/router.dart';
-import 'package:chat_app/screens/home_layout.dart';
 import 'package:chat_app/styles/theme.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -13,6 +13,7 @@ void main() async {
       apiKey: 'AIzaSyCfigdZ1yLu8q_P-AW8o8oSmZxNRZEOPOE',
       projectId: 'chat-app-4c7d9',
       messagingSenderId: '492692096429',
+      storageBucket: "chat-app-4c7d9.appspot.com",
     ),
   );
   runApp(const MyApp());
@@ -24,14 +25,16 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-        title: 'Spark',
-        theme: lightTheme,
-        darkTheme: darkTheme,
-        themeMode: ThemeMode.system,
-        home: const LandingScreen(),
-        debugShowCheckedModeBanner: false,
-         onGenerateRoute: Routers().generateRoute,
- );
+    return ProviderScope(
+      child: MaterialApp(
+          title: 'Spark',
+          theme: lightTheme,
+          darkTheme: darkTheme,
+          themeMode: ThemeMode.system,
+          home: const LandingScreen(),
+          debugShowCheckedModeBanner: false,
+           onGenerateRoute: Routers().generateRoute,
+       ),
+    );
   }
 }
