@@ -1,9 +1,12 @@
-import 'package:chat_app/common/show/country_picker.dart';
 import 'package:chat_app/common/widgets/buttons.dart';
 import 'package:country_picker/country_picker.dart';
 import 'package:flutter/material.dart';
 
+import '../../common/utils/country_picker.dart';
+
 class LoginScreen extends StatefulWidget {
+  static const String route = '/login';
+
   const LoginScreen({super.key});
 
   @override

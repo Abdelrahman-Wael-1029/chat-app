@@ -4,6 +4,7 @@ import 'package:chat_app/screens/home_layout.dart';
 import 'package:flutter/material.dart';
 
 import 'auth/screens/login.dart';
+import 'auth/screens/otp.dart';
 
 class Routers {
   Route generateRoute(RouteSettings settings) {
@@ -12,8 +13,10 @@ class Routers {
         return MaterialPageRoute(builder: (context) => const HomeScreen());
       case '/landing':
         return MaterialPageRoute(builder: (context) => const LandingScreen());
-      case '/login':
+      case LoginScreen.route:
         return MaterialPageRoute(builder: (context) => const LoginScreen());
+      case OTPScreen.route:
+        return MaterialPageRoute(builder: (context) => OTPScreen(verificationId: settings.arguments as String));
       default:
         return MaterialPageRoute(
             builder: (context) =>
