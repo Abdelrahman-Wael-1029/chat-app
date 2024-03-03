@@ -1,6 +1,8 @@
+import 'package:chat_app/features/auth/controller/auth_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class OTPScreen extends StatefulWidget {
+class OTPScreen extends ConsumerWidget {
   static const String route = '/otp-verify';
   String verificationId;
 
@@ -10,12 +12,7 @@ class OTPScreen extends StatefulWidget {
   });
 
   @override
-  State<OTPScreen> createState() => _OTPScreenState();
-}
-
-class _OTPScreenState extends State<OTPScreen> {
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Verify your phone number"),
@@ -33,18 +30,22 @@ class _OTPScreenState extends State<OTPScreen> {
               const SizedBox(height: 20),
               SizedBox(
                 width: MediaQuery.of(context).size.width * .5,
-                child: const TextField(
-
+                child: TextField(
                   textAlign: TextAlign.center,
                   keyboardType: TextInputType.phone,
-                  decoration: InputDecoration(
-                    hintText: "-  -  -  -  -  -",
-                    hintStyle: TextStyle(
-                      fontSize: 30,
-
-                    )
-                  ),
-
+                  decoration: const InputDecoration(
+                      hintText: "-  -  -  -  -  -",
+                      hintStyle: TextStyle(
+                        fontSize: 30,
+                      )),
+                  onChanged: (value) {
+                    if (value.length == 6) {
+                      ref.watch(authControllerProvider).verifyOTP(
+                          context: context,
+                          verificationId: verificationId,
+                          smsCode: value);
+                    }
+                  },
                 ),
               ),
             ],

@@ -43,4 +43,18 @@ class AuthRepository {
       print(e);
     }
   }
+
+  void verifyOTP({
+    required context,
+    required String verificationId,
+    required String smsCode,
+  }) async{
+    PhoneAuthCredential phoneAuthCredential = PhoneAuthProvider.credential(
+      verificationId: verificationId,
+      smsCode: smsCode,
+    );
+    await auth.signInWithCredential(phoneAuthCredential);
+    Navigator.pushNamedAndRemoveUntil(context, 'error now', (route) => false);
+
+  }
 }
