@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../repository/auth_repository.dart';
@@ -28,6 +30,18 @@ class AuthController {
       context: context,
       verificationId: verificationId,
       smsCode: smsCode,
+    );
+  }
+
+  void saveUserData({
+    required context,
+    required String name,
+    String? image,
+  }){
+    authRepository.saveUserData(
+      context: context,
+      name: name,
+      image: image,
     );
   }
 }

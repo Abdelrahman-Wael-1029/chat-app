@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 Widget defaultEvaluationButton(context, {
   required String text,
   required Function() onPressed,
+  double width = double.infinity,
+  double height = 50,
 }) {
   return ElevatedButton(
     style: ElevatedButton.styleFrom(
@@ -11,7 +13,7 @@ Widget defaultEvaluationButton(context, {
           .of(context)
           .colorScheme
           .primary,
-      minimumSize: const Size(double.infinity, 50),
+      minimumSize: Size(width, height),
     ),
     onPressed: onPressed,
     child: Text(text,

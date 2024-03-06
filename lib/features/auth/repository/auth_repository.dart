@@ -1,23 +1,35 @@
+import 'dart:io';
+
 import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:chat_app/common/repository/common_firebase_storage.dart';
+import 'package:chat_app/models/user_model.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../common/utils/show_awesome_dialog.dart';
 import '../screens/otp.dart';
+import '../screens/user_info.dart';
 
-final authRepositoryProvider = Provider((ref) => AuthRepository(
-      storage: FirebaseStorage.instance,
-      auth: FirebaseAuth.instance,
-    ));
+final authRepositoryProvider = Provider(
+  (ref) => AuthRepository(
+    auth: FirebaseAuth.instance,
+    store: FirebaseFirestore.instance,
+    commonFirebaseStorageRepositoryProvider:
+        ref.read(commonFirebaseStorageRepositoryProvider),
+  ),
+);
 
 class AuthRepository {
   FirebaseAuth auth;
-  FirebaseStorage storage;
+  FirebaseFirestore store;
+  CommonFirebaseStorageRepository commonFirebaseStorageRepositoryProvider;
 
   AuthRepository({
-    required this.storage,
     required this.auth,
+    required this.store,
+    required this.commonFirebaseStorageRepositoryProvider,
   });
 
   void signInWithPhone(context, String phoneNumber) async {
@@ -27,9 +39,9 @@ class AuthRepository {
         verificationCompleted: (PhoneAuthCredential credential) async {
           auth.signInWithCredential(credential);
         },
-        verificationFailed: (FirebaseAuthException e) async{
-          showAwesomeDialog(context, desc: e.message!, dialogType: DialogType.error);
-
+        verificationFailed: (FirebaseAuthException e) async {
+          showAwesomeDialog(context,
+              desc: e.message!, dialogType: DialogType.error);
         },
         codeSent: (String verificationId, int? resendToken) {
           Navigator.pushNamed(context, OTPScreen.route,
@@ -38,10 +50,10 @@ class AuthRepository {
         codeAutoRetrievalTimeout: (String code) {},
       );
     } on FirebaseException catch (e) {
-      showAwesomeDialog(context, desc: e.message!, dialogType: DialogType.error);
+      showAwesomeDialog(context,
+          desc: e.message!, dialogType: DialogType.error);
     } catch (e) {
-
-       showAwesomeDialog(context, desc: e.toString());
+      showAwesomeDialog(context, desc: e.toString());
     }
   }
 
@@ -55,6 +67,40 @@ class AuthRepository {
       smsCode: smsCode,
     );
     await auth.signInWithCredential(phoneAuthCredential);
-    Navigator.pushNamedAndRemoveUntil(context, 'error now', (route) => false);
+    Navigator.pushNamedAndRemoveUntil(
+        context, UserInfoScreen.route, (route) => false);
+  }
+
+  void saveUserData({
+    required context,
+    required String name,
+    String? image,
+  }) async {
+    try {
+      String uid = auth.currentUser!.uid;
+      if (image != null) {
+        image = await commonFirebaseStorageRepositoryProvider.uploadFile(
+            "profilePic/$uid.png", File(image));
+      } else {
+        image =
+            'https://p7.hiclipart.com/preview/782/114/405/5bbc3519d674c.jpg';
+      }
+      UserModel user = UserModel(
+        id: auth.currentUser!.uid,
+        name: name,
+        phone: auth.currentUser!.phoneNumber!,
+        image: image,
+        groupsId: [],
+        isOnline: true,
+      );
+
+      await store.collection('users').doc(uid).set(user.toMap());
+
+    } on FirebaseException catch (e) {
+      showAwesomeDialog(context,
+          desc: e.message!, dialogType: DialogType.error);
+    } catch (e) {
+      showAwesomeDialog(context, desc: e.toString());
+    }
   }
 }

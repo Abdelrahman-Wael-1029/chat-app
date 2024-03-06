@@ -1,3 +1,5 @@
+import 'package:chat_app/features/auth/screens/login.dart';
+import 'package:chat_app/features/auth/screens/user_info.dart';
 import 'package:chat_app/features/landing/screens/landing_screen.dart';
 import 'package:chat_app/router.dart';
 import 'package:chat_app/styles/theme.dart';
@@ -31,7 +33,7 @@ class MyApp extends StatelessWidget {
           theme: lightTheme,
           darkTheme: darkTheme,
           themeMode: ThemeMode.system,
-          home: const LandingScreen(),
+          home: const LoginScreen(),
           debugShowCheckedModeBanner: false,
            onGenerateRoute: Routers().generateRoute,
        ),

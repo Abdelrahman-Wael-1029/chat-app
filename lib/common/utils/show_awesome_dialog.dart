@@ -10,7 +10,6 @@ void showAwesomeDialog(
   Function()? btnCancelOnPress,
   Function()? btnOkOnPress,
 }) {
-  print('showAwesomeDialog');
   AwesomeDialog(
     context: context,
     dialogType: dialogType,
