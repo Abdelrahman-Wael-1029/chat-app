@@ -95,12 +95,27 @@ class AuthRepository {
       );
 
       await store.collection('users').doc(uid).set(user.toMap());
-
     } on FirebaseException catch (e) {
       showAwesomeDialog(context,
           desc: e.message!, dialogType: DialogType.error);
     } catch (e) {
       showAwesomeDialog(context, desc: e.toString());
+    }
+  }
+
+  Future<UserModel?> getUserData() async {
+    try {
+      if (auth.currentUser == null) {
+        return null;
+      }
+      DocumentSnapshot<Map<String, dynamic>> user = await store.collection(
+          'users').doc(auth.currentUser!.uid).get();
+      if(user.data() != null){
+        return UserModel.fromJson(user.data()!);
+      }
+      return null;
+    }catch(e){
+      return null;
     }
   }
 }

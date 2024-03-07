@@ -16,7 +16,7 @@ class LoginScreen extends ConsumerStatefulWidget {
 }
 
 class _LoginScreenState extends ConsumerState<LoginScreen> {
-  String? countryCode;
+  String? countryCode = "20";
   var phoneController = TextEditingController();
 
   @override

@@ -41,8 +41,7 @@ class _UserInfoScreenState extends ConsumerState<UserInfoScreen> {
       child: Scaffold(
         body: Padding(
           padding: const EdgeInsets.all(30.0),
-          child: SizedBox(
-            width: double.infinity,
+          child: SingleChildScrollView(
             child: Form(
               key: formKey,
               child: Column(
@@ -56,13 +55,14 @@ class _UserInfoScreenState extends ConsumerState<UserInfoScreen> {
                         alignment: Alignment.bottomRight,
                         children: [
                           CircleAvatar(
-                            radius: 100,
+                            radius: 80,
                             child: image != null
                                 ? ClipRRect(
                                     borderRadius: BorderRadius.circular(100),
                                     child: Image.file(
                                       File(image!.path),
                                       width: double.infinity,
+                                      height: double.infinity,
                                       fit: BoxFit.fill,
                                       errorBuilder:
                                           (context, error, stackTrace) {
@@ -75,6 +75,7 @@ class _UserInfoScreenState extends ConsumerState<UserInfoScreen> {
                                     child: Image.network(
                                       'https://p7.hiclipart.com/preview/782/114/405/5bbc3519d674c.jpg',
                                       width: double.infinity,
+                                      height: double.infinity,
                                       fit: BoxFit.fill,
                                       errorBuilder:
                                           (context, error, stackTrace) {
