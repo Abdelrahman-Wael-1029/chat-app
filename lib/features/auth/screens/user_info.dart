@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:chat_app/common/widgets/buttons.dart';
+import 'package:chat_app/screens/home_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
@@ -170,11 +171,16 @@ class _UserInfoScreenState extends ConsumerState<UserInfoScreen> {
                     text: "NEXT",
                     onPressed: () {
                       if (formKey.currentState!.validate()) {
-                        ref.read(authControllerProvider).saveUserData(
-                              name: nameController.text,
-                              image: image?.path,
-                              context: context,
-                            );
+                        try {
+                          ref.read(authControllerProvider).saveUserData(
+                            name: nameController.text,
+                            image: image?.path,
+                            context: context,
+                          );
+                          Navigator.pushNamedAndRemoveUntil(context, HomeScreen.route, (route) => false);
+                        } catch (e) {
+                          print(e);
+                        }
                       }
                     },
                     width: MediaQuery.of(context).size.width * 0.25,

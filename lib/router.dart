@@ -19,6 +19,8 @@ class Routers {
         return MaterialPageRoute(builder: (context) => const LoginScreen());
       case UserInfoScreen.route:
         return MaterialPageRoute(builder: (context) => const UserInfoScreen());
+      case HomeScreen.route:
+        return MaterialPageRoute(builder: (context) => const HomeScreen());
       case OTPScreen.route:
         return MaterialPageRoute(builder: (context) => OTPScreen(verificationId: settings.arguments as String));
       default:

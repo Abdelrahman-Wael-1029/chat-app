@@ -2,11 +2,17 @@ import 'dart:io';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../models/user_model.dart';
 import '../repository/auth_repository.dart';
 
 final authControllerProvider = Provider((ref) {
   final authRepository = ref.read(authRepositoryProvider);
   return AuthController(authRepository: authRepository);
+});
+
+final authGetCurrentUserProvider = FutureProvider<UserModel?>((ref) async {
+  final authController = ref.read(authControllerProvider);
+  return await authController.getUserData();
 });
 
 class AuthController {
@@ -43,5 +49,9 @@ class AuthController {
       name: name,
       image: image,
     );
+  }
+
+  Future<UserModel?> getUserData() async{
+    return await authRepository.getUserData();
   }
 }

@@ -110,11 +110,13 @@ class AuthRepository {
       }
       DocumentSnapshot<Map<String, dynamic>> user = await store.collection(
           'users').doc(auth.currentUser!.uid).get();
+
       if(user.data() != null){
         return UserModel.fromJson(user.data()!);
       }
       return null;
     }catch(e){
+      print(e.toString());
       return null;
     }
   }

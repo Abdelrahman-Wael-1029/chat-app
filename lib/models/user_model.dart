@@ -17,12 +17,12 @@ class UserModel {
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
     return UserModel(
-      id: json['id'],
-      name: json['name'],
-      phone: json[' phone'],
       image: json['image'],
-      groupsId: json['groupsId'],
+      name: json['name'],
+      groupsId: List<String>.from(json['groupsId']),
+      phone: json['phone'],
       isOnline: json['isOnline'],
+      id: json['id'],
     );
   }
 
