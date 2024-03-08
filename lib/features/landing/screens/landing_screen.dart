@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../common/widgets/button.dart';
+import '../../../common/widgets/buttons.dart';
 
 class LandingScreen extends StatelessWidget {
   const LandingScreen({super.key});
@@ -20,7 +20,6 @@ class LandingScreen extends StatelessWidget {
                 'Welcome to Spark!',
                 style: Theme.of(context).textTheme.headlineLarge,
               ),
-
               const SizedBox(height: 20),
               Image.asset(
                 'images/landing/landing_image.png',
@@ -29,21 +28,21 @@ class LandingScreen extends StatelessWidget {
                   return const Text('😉');
                 },
                 fit: BoxFit.fill,
-                width: double.infinity
               ),
               const SizedBox(height: 20),
-
-               Text(
-                'Get started by tapping the button below!',
-                style: Theme.of(context).textTheme.bodyMedium
-              ),
-              const SizedBox(height: 20),
-              defaultEvaluationButton(
-                context,
-                text: 'Get Started',
-                onPressed: () {
-
-                },
+              Column(
+                children: [
+                  Text('Get started by tapping the button below!',
+                      style: Theme.of(context).textTheme.bodyMedium),
+                  const SizedBox(height: 30),
+                  defaultEvaluationButton(
+                    context,
+                    text: 'Get Started',
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/login');
+                    },
+                  ),
+                ],
               ),
             ],
           ),

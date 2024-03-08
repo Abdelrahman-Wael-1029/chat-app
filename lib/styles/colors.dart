@@ -3,6 +3,10 @@ import 'package:flutter/material.dart';
 class LightColors {
   static Color primaryColor = Colors.deepPurple;
 
+  static Color secondaryColor = Colors.deepPurpleAccent;
+
+  static Color tertiaryColor = const Color(0xff7FB3C8);
+
   static Color background = const Color(0xfffbeaff);
 
   static Color appBarColor = Colors.white;
@@ -28,6 +32,10 @@ class LightColors {
 
 class DarkColors {
   static Color primaryColor = Colors.deepPurple;
+
+  static Color secondaryColor = Colors.deepPurpleAccent;
+
+  static Color tertiaryColor = const Color(0xff7FB3C8);
 
   static Color background = const Color(0xff1a1a1a);
 

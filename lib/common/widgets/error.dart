@@ -1,22 +1,26 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
-  static const String route = '/home';
+class ErrorScreen extends StatelessWidget {
+  String error;
+
+  ErrorScreen({
+    super.key,
+    required this.error,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Spark'),
+        title: const Text('Error'),
       ),
-      body: const Center(
+      body:  Center(
         child: Text(
-          'Welcome to Spark!',
-          style: TextStyle(
+          error,
+          style: const TextStyle(
             fontSize: 24,
             fontWeight: FontWeight.bold,
+            color: Colors.red,
           ),
         ),
       ),

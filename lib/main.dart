@@ -1,8 +1,15 @@
+import 'package:chat_app/common/widgets/error.dart';
+import 'package:chat_app/common/widgets/loading.dart';
+import 'package:chat_app/features/auth/controller/auth_controller.dart';
+import 'package:chat_app/features/auth/screens/login.dart';
+import 'package:chat_app/features/auth/screens/user_info.dart';
 import 'package:chat_app/features/landing/screens/landing_screen.dart';
+import 'package:chat_app/router.dart';
 import 'package:chat_app/screens/home_layout.dart';
 import 'package:chat_app/styles/theme.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -12,24 +19,42 @@ void main() async {
       apiKey: 'AIzaSyCfigdZ1yLu8q_P-AW8o8oSmZxNRZEOPOE',
       projectId: 'chat-app-4c7d9',
       messagingSenderId: '492692096429',
+      storageBucket: "chat-app-4c7d9.appspot.com",
     ),
   );
-  runApp(const MyApp());
+  runApp(const ProviderScope(child: MyApp()));
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends ConsumerWidget {
   const MyApp({super.key});
 
   // This widget is the root of your application.
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return MaterialApp(
       title: 'Spark',
       theme: lightTheme,
       darkTheme: darkTheme,
       themeMode: ThemeMode.system,
-      home: const LandingScreen(),
+      home: ref.watch(authGetCurrentUserProvider).when(
+        data: (user) {
+          if (user == null) {
+            return const LandingScreen();
+          } else {
+            return const HomeScreen();
+          }
+        },
+        error: (error, stack) {
+          return ErrorScreen(
+            error: error.toString(),
+          );
+        },
+        loading: () {
+          return const LoadingScreen();
+        },
+      ),
       debugShowCheckedModeBanner: false,
+      onGenerateRoute: Routers().generateRoute,
     );
   }
 }
