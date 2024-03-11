@@ -108,6 +108,7 @@ class AuthRepository {
       if (auth.currentUser == null) {
         return null;
       }
+      print(auth.currentUser!.uid);
       DocumentSnapshot<Map<String, dynamic>> user = await store.collection(
           'users').doc(auth.currentUser!.uid).get();
 

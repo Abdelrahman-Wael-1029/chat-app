@@ -12,7 +12,6 @@ ThemeData lightTheme = ThemeData(
     brightness: Brightness.light,
     secondary: LightColors.secondaryColor,
     tertiary: LightColors.tertiaryColor,
-
   ),
   appBarTheme: AppBarTheme(
     backgroundColor: LightColors.appBarBackgroundColor,
@@ -31,17 +30,19 @@ ThemeData lightTheme = ThemeData(
     foregroundColor: LightColors.appBarColor,
   ),
   scaffoldBackgroundColor: LightColors.background,
-
-  iconTheme:  IconThemeData(
+  iconTheme: IconThemeData(
     color: LightColors.iconColor,
   ),
-
   tabBarTheme: TabBarTheme(
     labelColor: LightColors.tabColor,
     unselectedLabelColor: LightColors.unSelectedTabColor,
   ),
+  floatingActionButtonTheme: FloatingActionButtonThemeData(
+    backgroundColor: LightColors.primaryColor,
+    foregroundColor: LightColors.iconColor,
+  ),
 
-
+  dividerColor: Colors.grey,
 );
 
 ThemeData darkTheme = ThemeData(
@@ -54,7 +55,6 @@ ThemeData darkTheme = ThemeData(
     brightness: Brightness.light,
     secondary: DarkColors.secondaryColor,
     tertiary: DarkColors.tertiaryColor,
-
   ),
   appBarTheme: AppBarTheme(
     backgroundColor: DarkColors.appBarBackgroundColor,
@@ -73,13 +73,17 @@ ThemeData darkTheme = ThemeData(
     foregroundColor: DarkColors.appBarColor,
   ),
   scaffoldBackgroundColor: DarkColors.background,
-
-  iconTheme:  IconThemeData(
+  iconTheme: IconThemeData(
     color: DarkColors.iconColor,
   ),
-
   tabBarTheme: TabBarTheme(
     labelColor: DarkColors.tabColor,
     unselectedLabelColor: DarkColors.unSelectedTabColor,
   ),
+  floatingActionButtonTheme: FloatingActionButtonThemeData(
+    backgroundColor: LightColors.primaryColor,
+    foregroundColor: LightColors.iconColor,
+  ),
+  dividerColor: Colors.grey,
+
 );

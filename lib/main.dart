@@ -50,7 +50,7 @@ class MyApp extends ConsumerWidget {
           );
         },
         loading: () {
-          return const LoadingScreen();
+          return const Loading();
         },
       ),
       debugShowCheckedModeBanner: false,
