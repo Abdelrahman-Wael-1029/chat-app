@@ -1,8 +1,7 @@
 import 'package:chat_app/common/widgets/error.dart';
 import 'package:chat_app/common/widgets/loading.dart';
 import 'package:chat_app/features/auth/controller/auth_controller.dart';
-import 'package:chat_app/features/auth/screens/login.dart';
-import 'package:chat_app/features/auth/screens/user_info.dart';
+import 'package:chat_app/features/chat/screens/chat_screen.dart';
 import 'package:chat_app/features/landing/screens/landing_screen.dart';
 import 'package:chat_app/router.dart';
 import 'package:chat_app/screens/home_layout.dart';
@@ -33,11 +32,19 @@ class MyApp extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return MaterialApp(
       title: 'Spark',
+
       theme: lightTheme,
       darkTheme: darkTheme,
       themeMode: ThemeMode.system,
       home: ref.watch(authGetCurrentUserProvider).when(
         data: (user) {
+          return ChatScreen(
+            name: 'ana',
+            imageUrl:
+                "https://firebasestorage.googleapis.com/v0/b/chat-app-4c7d9.appspot.com/o/profilePic%2FBTs7x9ei10XhaTo1f1g4gww5ELM2.png?alt=media&token=07656aa6-09c4-4706-ac78-d5bd75b2d41e",
+            isOnline: true,
+            uid: "my ID",
+          );
           if (user == null) {
             return const LandingScreen();
           } else {
