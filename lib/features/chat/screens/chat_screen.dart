@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 
 import '../../../common/widgets/icon.dart';
 
-class ChatScreen extends StatelessWidget {
+class ChatScreen extends StatefulWidget {
   ChatScreen({
     super.key,
     required this.name,
@@ -20,6 +20,13 @@ class ChatScreen extends StatelessWidget {
   String uid;
 
   @override
+  State<ChatScreen> createState() => _ChatScreenState();
+}
+
+class _ChatScreenState extends State<ChatScreen> {
+  bool notEmpty = false;
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -28,7 +35,7 @@ class ChatScreen extends StatelessWidget {
           children: [
             CircleAvatar(
               radius: 20,
-              backgroundImage: NetworkImage(imageUrl),
+              backgroundImage: NetworkImage(widget.imageUrl),
             ),
             const SizedBox(
               width: 10,
@@ -38,14 +45,14 @@ class ChatScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    name,
+                    widget.name,
                     style: Theme.of(context).textTheme.headlineMedium!.copyWith(
                           color: Theme.of(context).colorScheme.onPrimary,
                         ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
-                  if (isOnline)
+                  if (widget.isOnline)
                     Text(
                       "Online",
                       style: Theme.of(context).textTheme.bodySmall!.copyWith(
@@ -86,6 +93,17 @@ class ChatScreen extends StatelessWidget {
                 child: TextField(
                   maxLines: 5,
                   minLines: 1,
+                  onChanged: (value) {
+                    if (value.isNotEmpty) {
+                      setState(() {
+                        notEmpty = true;
+                      });
+                    } else {
+                      setState(() {
+                        notEmpty = false;
+                      });
+                    }
+                  },
                   textAlignVertical: TextAlignVertical.bottom,
                   decoration: InputDecoration(
                     prefixIcon: IconButton(
@@ -114,11 +132,17 @@ class ChatScreen extends StatelessWidget {
                 ),
               ),
             ),
-            outlineIcons(
-              context: context,
-              icon: const Icon(Icons.mic),
-              onPressed: () {},
-            ),
+            (!notEmpty)
+                ? outlineIcons(
+                    context: context,
+                    icon: Icon(Icons.mic),
+                    onPressed: () {},
+                  )
+                : outlineIcons(
+                    context: context,
+                    icon: Icon(Icons.send),
+                    onPressed: () {},
+                  ),
           ],
         ),
       ),
