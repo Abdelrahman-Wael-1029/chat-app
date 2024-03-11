@@ -12,7 +12,6 @@ class SelectContactsRepository {
 
   Future<List<Contact>> getContacts() async {
     List<Contact> contacts = [];
-    var users = await store.collection('users').get();
 
     if (await FlutterContacts.requestPermission()) {
       final getContacts = await FlutterContacts.getContacts(

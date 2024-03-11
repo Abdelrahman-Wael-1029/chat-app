@@ -56,5 +56,4 @@ Widget defaultTextButton(context,
               .tertiary,
         )),
   );
-
 }

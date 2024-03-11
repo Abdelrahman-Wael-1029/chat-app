@@ -28,6 +28,8 @@ class LightColors {
   static Color searchBarColor = const Color(0xffc2c2c2);
 
   static Color chatBoxColor = Colors.white;
+
+  static Color textFeildColor =  const Color(0xffefefef);
 }
 
 class DarkColors {
@@ -58,4 +60,6 @@ class DarkColors {
   static Color searchBarColor = const Color(0xff262626);
 
   static Color chatBoxColor = Colors.black;
+
+  static Color textFeildColor = const Color(0xff262626);
 }
