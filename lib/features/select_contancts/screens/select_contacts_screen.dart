@@ -12,7 +12,7 @@ class SelectContactsScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final contacts = ref.watch(selectContactsControllerProvider);
+    final contacts = ref.watch(getContactsControllerProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -22,7 +22,7 @@ class SelectContactsScreen extends ConsumerWidget {
         padding: const EdgeInsets.all(20.0),
         child: RefreshIndicator(
           onRefresh: () async {
-            ref.refresh(selectContactsControllerProvider);
+            ref.refresh(getContactsControllerProvider);
           },
           child: SingleChildScrollView(
             child: Column(
@@ -56,18 +56,23 @@ class SelectContactsScreen extends ConsumerWidget {
                 ),
                 contacts.when(
                   data: (data){
-                    print(data);
                     return ListView.builder(
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
                       itemCount: data.length,
                       itemBuilder: (context, index) {
                         var image = data[index].photo;
-
                         return NewContact(
                           title: data[index].displayName ?? "",
                           icon: image ==null? Icons.person:null,
                           backgroundImage: image != null ? MemoryImage(image) : null,
+                          onTap: (){
+                            ref.read(selectContactsControllerProvider).selectContact(
+                              context,
+                              data[index].id,
+                            );
+
+                          },
                         );
                       },
                     );
