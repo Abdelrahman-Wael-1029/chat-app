@@ -31,7 +31,7 @@ class _ChatScreenState extends State<ChatScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Row(
-          mainAxisSize: MainAxisSize.min,
+          mainAxisSize: MainAxisSize.max,
           children: [
             CircleAvatar(
               radius: 20,
@@ -86,49 +86,45 @@ class _ChatScreenState extends State<ChatScreen> {
         child: Row(
           children: [
             Expanded(
-              child: Padding(
-                padding: EdgeInsets.only(
-                  left: 8.0,
-                ),
-                child: TextField(
-                  maxLines: 5,
-                  minLines: 1,
-                  onChanged: (value) {
-                    if (value.isNotEmpty) {
-                      setState(() {
-                        notEmpty = true;
-                      });
-                    } else {
-                      setState(() {
-                        notEmpty = false;
-                      });
-                    }
-                  },
-                  textAlignVertical: TextAlignVertical.bottom,
-                  decoration: InputDecoration(
-                    prefixIcon: IconButton(
-                      onPressed: () {},
-                      icon: const Icon(Icons.emoji_emotions_outlined),
-                    ),
-                    suffixIcon: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        IconButton(
-                          onPressed: () {},
-                          icon: const Icon(Icons.attach_file),
-                        ),
-                        IconButton(
-                          onPressed: () {},
-                          icon: const Icon(Icons.camera_alt),
-                        ),
-                      ],
-                    ),
-                    hintText: "Type a message...",
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(30),
-                    ),
-                    contentPadding: const EdgeInsets.all(10),
+              child: TextField(
+                textDirection: TextDirection.ltr,
+                maxLines: 5,
+                minLines: 1,
+                onChanged: (value) {
+                  if (value.isNotEmpty) {
+                    setState(() {
+                      notEmpty = true;
+                    });
+                  } else {
+                    setState(() {
+                      notEmpty = false;
+                    });
+                  }
+                },
+                textAlignVertical: TextAlignVertical.bottom,
+                decoration: InputDecoration(
+                  prefixIcon: IconButton(
+                    onPressed: () {},
+                    icon: const Icon(Icons.emoji_emotions_outlined),
                   ),
+                  suffixIcon: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      IconButton(
+                        onPressed: () {},
+                        icon: const Icon(Icons.attach_file),
+                      ),
+                      IconButton(
+                        onPressed: () {},
+                        icon: const Icon(Icons.camera_alt),
+                      ),
+                    ],
+                  ),
+                  hintText: "Type a message...",
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                  contentPadding: const EdgeInsets.all(10),
                 ),
               ),
             ),
