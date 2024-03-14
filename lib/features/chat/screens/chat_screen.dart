@@ -1,10 +1,17 @@
 import 'dart:math';
 
+import 'package:chat_app/common/widgets/error.dart';
+import 'package:chat_app/common/widgets/message_chat.dart';
+import 'package:chat_app/models/message.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../common/widgets/icon.dart';
+import '../../../common/widgets/loading.dart';
+import '../controller/chat_controller.dart';
 
-class ChatScreen extends StatefulWidget {
+class ChatScreen extends ConsumerStatefulWidget {
   ChatScreen({
     super.key,
     required this.name,
@@ -14,22 +21,29 @@ class ChatScreen extends StatefulWidget {
   });
 
   static const String route = '/chat';
+  var scrollController = ScrollController();
   String name;
   String imageUrl;
   bool isOnline;
   String uid;
 
   @override
-  State<ChatScreen> createState() => _ChatScreenState();
+  ConsumerState<ChatScreen> createState() => _ChatScreenState();
 }
 
-class _ChatScreenState extends State<ChatScreen> {
+class _ChatScreenState extends ConsumerState<ChatScreen> {
   bool notEmpty = false;
+  var textController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
+    var chatController = ref.read(chatControllerProvider);
+    final messages = chatController.getMessages(receiverId: widget.uid);
+
     return Scaffold(
       appBar: AppBar(
+        titleSpacing: 0,
+        surfaceTintColor: Colors.transparent,
         title: Row(
           mainAxisSize: MainAxisSize.max,
           children: [
@@ -79,6 +93,27 @@ class _ChatScreenState extends State<ChatScreen> {
           ),
         ],
       ),
+      body: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 20.0),
+        child: StreamBuilder<List<MessageModel>>(
+          stream: messages,
+          builder: (context, snapshot) {
+            if (snapshot.hasError) {
+              return ErrorScreen(
+                error: snapshot.error.toString(),
+              );
+            }
+
+            if (!snapshot.hasData) {
+              return const Loading();
+            }
+
+            return MessageChat(
+              messages: snapshot.data!,
+            );
+          },
+        ),
+      ),
       bottomNavigationBar: Container(
         padding: EdgeInsets.only(
           bottom: max(5, MediaQuery.of(context).viewInsets.bottom),
@@ -87,6 +122,7 @@ class _ChatScreenState extends State<ChatScreen> {
           children: [
             Expanded(
               child: TextField(
+                controller: textController,
                 textDirection: TextDirection.ltr,
                 maxLines: 5,
                 minLines: 1,
@@ -100,6 +136,7 @@ class _ChatScreenState extends State<ChatScreen> {
                       notEmpty = false;
                     });
                   }
+                  print(notEmpty);
                 },
                 textAlignVertical: TextAlignVertical.bottom,
                 decoration: InputDecoration(
@@ -131,13 +168,35 @@ class _ChatScreenState extends State<ChatScreen> {
             (!notEmpty)
                 ? outlineIcons(
                     context: context,
-                    icon: Icon(Icons.mic),
+                    icon: const Icon(Icons.mic),
                     onPressed: () {},
                   )
                 : outlineIcons(
                     context: context,
-                    icon: Icon(Icons.send),
-                    onPressed: () {},
+                    icon: const Icon(Icons.send),
+                    onPressed: () {
+                      if (textController.text.isEmpty) return;
+                      chatController.setMessages(
+                        context: context,
+                        message: MessageModel(
+                          message: textController.text,
+                          senderId: FirebaseAuth.instance.currentUser!.uid,
+                          receiverId: widget.uid,
+                          time: DateTime.now().toString(),
+                          isRead: false,
+                        ),
+                      );
+                      setState(() {
+                        textController.clear();
+                        notEmpty = false;
+                      });
+                      //   make scroll to down page
+                      widget.scrollController.animateTo(
+                        widget.scrollController.position.maxScrollExtent,
+                        duration: const Duration(milliseconds: 300),
+                        curve: Curves.easeOut,
+                      );
+                    },
                   ),
           ],
         ),

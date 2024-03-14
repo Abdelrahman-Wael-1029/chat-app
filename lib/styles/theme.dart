@@ -15,7 +15,7 @@ ThemeData lightTheme = ThemeData(
 
   ),
   inputDecorationTheme: InputDecorationTheme(
-    fillColor: LightColors.textFeildColor,
+    fillColor: LightColors.textFieldColor,
     filled: true,
     focusColor: LightColors.textColor,
     iconColor: LightColors.iconColor,
@@ -102,7 +102,7 @@ ThemeData darkTheme = ThemeData(
   dividerColor: Colors.grey,
 
   inputDecorationTheme: InputDecorationTheme(
-    fillColor: DarkColors.textFeildColor,
+    fillColor: DarkColors.textFieldColor,
     filled: true,
     focusColor: DarkColors.textColor,
     iconColor: DarkColors.iconColor,
@@ -113,5 +113,6 @@ ThemeData darkTheme = ThemeData(
     suffixIconColor: DarkColors.iconColor,
 
   ),
-
 );
+
+
