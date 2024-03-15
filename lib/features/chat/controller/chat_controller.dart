@@ -19,11 +19,11 @@ class ChatController {
     return messages;
   }
 
-  void setMessages({
+  Future<void> setMessages({
     required context,
     required MessageModel message,
-  }) {
-    chatRepository.setMessages(
+  }) async {
+    await chatRepository.setMessages(
       context: context,
       message: message,
     );

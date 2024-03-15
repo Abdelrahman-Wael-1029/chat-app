@@ -42,12 +42,12 @@ class ChatRepository {
     return messages.stream;
   }
 
-  void setMessages({
+  Future<void> setMessages({
     required context,
     required MessageModel message,
-  }) {
+  }) async {
     try {
-      store.runTransaction((transaction) async {
+      await store.runTransaction((transaction) async {
         await store
             .collection('users')
             .doc(message.senderId)
