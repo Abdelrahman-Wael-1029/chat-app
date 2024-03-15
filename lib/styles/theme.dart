@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 ThemeData lightTheme = ThemeData(
+  brightness: Brightness.light,
   colorScheme: ColorScheme.fromSeed(
     seedColor: LightColors.primaryColor,
     onSurface: LightColors.textColor,
@@ -12,10 +13,9 @@ ThemeData lightTheme = ThemeData(
     brightness: Brightness.light,
     secondary: LightColors.secondaryColor,
     tertiary: LightColors.tertiaryColor,
-
   ),
   inputDecorationTheme: InputDecorationTheme(
-    fillColor: LightColors.textFeildColor,
+    fillColor: LightColors.textFieldColor,
     filled: true,
     focusColor: LightColors.textColor,
     iconColor: LightColors.iconColor,
@@ -57,6 +57,7 @@ ThemeData lightTheme = ThemeData(
 );
 
 ThemeData darkTheme = ThemeData(
+  brightness: Brightness.dark,
   colorScheme: ColorScheme.fromSeed(
     seedColor: DarkColors.primaryColor,
     onSurface: DarkColors.textColor,
@@ -102,7 +103,7 @@ ThemeData darkTheme = ThemeData(
   dividerColor: Colors.grey,
 
   inputDecorationTheme: InputDecorationTheme(
-    fillColor: DarkColors.textFeildColor,
+    fillColor: DarkColors.textFieldColor,
     filled: true,
     focusColor: DarkColors.textColor,
     iconColor: DarkColors.iconColor,
@@ -113,5 +114,6 @@ ThemeData darkTheme = ThemeData(
     suffixIconColor: DarkColors.iconColor,
 
   ),
-
 );
+
+

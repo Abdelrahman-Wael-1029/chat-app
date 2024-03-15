@@ -7,7 +7,7 @@ class LightColors {
 
   static Color tertiaryColor = const Color(0xff7FB3C8);
 
-  static Color background = const Color(0xfffbeaff);
+  static Color background = const Color(0xffF5F5F5);
 
   static Color appBarColor = Colors.white;
 
@@ -15,9 +15,9 @@ class LightColors {
 
   static Color textColor = const Color.fromRGBO(10, 10, 10, 1);
 
-  static Color messageColor = Colors.deepPurpleAccent;
+  static Color messageColor =  const Color(0xffd1c4e9);
 
-  static Color senderMessageColor = const Color(0xff7FB3C8);
+  static Color senderMessageColor =const Color(0xffb7d3e1);
 
   static Color tabColor = Colors.white;
 
@@ -29,7 +29,7 @@ class LightColors {
 
   static Color chatBoxColor = Colors.white;
 
-  static Color textFeildColor =  const Color(0xffefefef);
+  static Color textFieldColor =  const Color(0xffefefef);
 }
 
 class DarkColors {
@@ -49,7 +49,7 @@ class DarkColors {
 
   static Color messageColor = Colors.deepPurpleAccent;
 
-  static Color senderMessageColor = const Color(0xff7FB3C8);
+  static Color senderMessageColor = const Color(0xff3d3d3d);
 
   static Color tabColor = Colors.deepPurple;
 
@@ -61,5 +61,5 @@ class DarkColors {
 
   static Color chatBoxColor = Colors.black;
 
-  static Color textFeildColor = const Color(0xff262626);
+  static Color textFieldColor = const Color(0xff262626);
 }
