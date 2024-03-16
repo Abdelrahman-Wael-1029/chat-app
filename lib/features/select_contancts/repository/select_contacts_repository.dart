@@ -3,6 +3,7 @@ import 'dart:typed_data';
 
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:chat_app/common/utils/show_awesome_dialog.dart';
+import 'package:chat_app/models/contact.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_contacts/flutter_contacts.dart';
@@ -18,9 +19,9 @@ class SelectContactsRepository {
 
   SelectContactsRepository({required this.store});
 
-  Future<List<Contact>> getContacts() async {
+  Future<List<ContactModel>> getContacts() async {
     var users = await store.collection('users').get();
-    List<Contact> contacts = [];
+    List<ContactModel> contacts = [];
 
     if (await FlutterContacts.requestPermission()) {
       final getContacts = await FlutterContacts.getContacts(
@@ -30,11 +31,17 @@ class SelectContactsRepository {
       );
       for (var contact in getContacts) {
         var user = _isFound(contact, users);
+        var myContact = ContactModel(
+          id: "",
+          name: contact.displayName,
+          phone: contact.phones[0].number.replaceAll(' ', ''),
+          image: user != null ? user['image'] : null,
+        );
         if (user != null) {
-          contact.displayName = user['name'];
-          contact.id = user['id'];
+          myContact.name = user['name'];
+          myContact.id = user['id'];
         }
-        contacts.add(contact);
+        contacts.add(myContact);
       }
     }
     return contacts;
