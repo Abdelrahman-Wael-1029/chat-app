@@ -67,9 +67,9 @@ class SelectContactsRepository {
     }
     showAwesomeDialog(
       context,
-      title: 'Error',
+      title: 'not found',
       desc: 'User not found, you can invite them to join Spark.',
-      dialogType: DialogType.error,
+      dialogType: DialogType.info,
       animType: AnimType.bottomSlide,
     );
   }

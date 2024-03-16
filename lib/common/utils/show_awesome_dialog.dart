@@ -20,5 +20,6 @@ void showAwesomeDialog(
     btnOkOnPress: btnOkOnPress,
     descTextStyle: Theme.of(context).textTheme.bodyMedium,
     titleTextStyle: Theme.of(context).textTheme.titleMedium,
+    dialogBackgroundColor: Theme.of(context).scaffoldBackgroundColor,
   ).show();
 }

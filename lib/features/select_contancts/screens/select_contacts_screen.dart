@@ -16,6 +16,7 @@ class SelectContactsScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
+        surfaceTintColor: Colors.transparent,
         title: const Text('Spark'),
       ),
       body: Padding(
