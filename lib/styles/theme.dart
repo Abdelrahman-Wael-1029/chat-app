@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 ThemeData lightTheme = ThemeData(
-  brightness: Brightness.light,
   colorScheme: ColorScheme.fromSeed(
     seedColor: LightColors.primaryColor,
     onSurface: LightColors.textColor,
@@ -57,7 +56,6 @@ ThemeData lightTheme = ThemeData(
 );
 
 ThemeData darkTheme = ThemeData(
-  brightness: Brightness.dark,
   colorScheme: ColorScheme.fromSeed(
     seedColor: DarkColors.primaryColor,
     onSurface: DarkColors.textColor,

@@ -55,28 +55,33 @@ class SelectContactsScreen extends ConsumerWidget {
                   height: 10,
                 ),
                 contacts.when(
-                  data: (data){
+                  data: (data) {
                     return ListView.builder(
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
                       itemCount: data.length,
                       itemBuilder: (context, index) {
-                        var image = data[index].photo;
+                        var image = data[index].image;
                         return NewContact(
-                          title: data[index].displayName ?? "",
-                          icon: image ==null? Icons.person:null,
-                          backgroundImage: image != null ? MemoryImage(image) : null,
-                          onTap: (){
-                            ref.read(selectContactsControllerProvider).selectContact(
-                              context,
-                              data[index].id,
-                            );
-
+                          title: data[index].name ?? "",
+                          icon: image == null ? Icons.person : null,
+                          backgroundImage: image != null
+                              ? NetworkImage(
+                                  image,
+                                )
+                              : null,
+                          onTap: () {
+                            print(data[index].id);
+                            ref
+                                .read(selectContactsControllerProvider)
+                                .selectContact(
+                                  context,
+                                  data[index].id,
+                                );
                           },
                         );
                       },
                     );
-
                   },
                   error: (error, stack) => Text(
                     error.toString(),
