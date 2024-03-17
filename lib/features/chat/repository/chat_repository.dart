@@ -44,10 +44,11 @@ class ChatRepository {
           else if(time.day == DateTime.now().day - 1){
             contact.time = 'Yesterday';
           }
-          else{
-            contact.time = time.day.toString() + '/' + time.month.toString() + '/' + time.year.toString();
-          }
-
+          else {
+          contact.time =
+              time.day.toString() + '/' + time.month.toString() + '/' +
+                  time.year.toString();
+        }
         contacts.add(contact);
       }
       return contacts;
