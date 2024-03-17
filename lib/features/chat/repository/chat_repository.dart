@@ -27,6 +27,7 @@ class ChatRepository {
         .collection('users')
         .doc(auth.currentUser!.uid)
         .collection('chat')
+        .orderBy('time', descending: true)
         .snapshots()
         .asyncMap((event) async {
       List<ContactModel> contacts = [];
@@ -36,7 +37,17 @@ class ChatRepository {
         var contact = ContactModel.fromJson(user.data()!);
         var lastMessageInfo = await store.collection('users').doc(auth.currentUser!.uid).collection('chat').doc(doc.id).get();
         contact.lastMessage = lastMessageInfo['lastMessage'];
-        contact.time = lastMessageInfo['time'];
+        var time =DateTime.parse(lastMessageInfo['time']);
+        if(time.day == DateTime.now().day) {
+          contact.time = '${time.hour}:${time.minute}';
+        }
+          else if(time.day == DateTime.now().day - 1){
+            contact.time = 'Yesterday';
+          }
+          else{
+            contact.time = time.day.toString() + '/' + time.month.toString() + '/' + time.year.toString();
+          }
+
         contacts.add(contact);
       }
       return contacts;
