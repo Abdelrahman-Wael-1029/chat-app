@@ -38,6 +38,8 @@ class Routers {
             builder: (context) =>
                 OTPScreen(verificationId: settings.arguments as String));
       default:
+        // remove the all the above case and add this
+
         return MaterialPageRoute(
             builder: (context) =>
                 ErrorScreen(error: "This page does not exist."));

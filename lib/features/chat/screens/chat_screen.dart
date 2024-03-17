@@ -15,10 +15,10 @@ import '../controller/chat_controller.dart';
 class ChatScreen extends ConsumerStatefulWidget {
   ChatScreen({
     super.key,
-    required this.name,
-    required this.imageUrl,
-    required this.isOnline,
-    required this.uid,
+      required this.name,
+      required this.imageUrl,
+      required this.isOnline,
+      required this.uid,
   });
 
   static const String route = '/chat';
@@ -49,7 +49,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen>
   @override
   void initState() {
     super.initState();
-    Future.delayed(const Duration(milliseconds: 150), () {
+    Future.delayed(const Duration(milliseconds: 200), () {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (scrollController.hasClients) {
           scrollToEnd();
@@ -114,7 +114,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen>
                 children: [
                   Text(
                     widget.name,
-                    style: Theme.of(context).textTheme.headlineMedium!.copyWith(
+                    style: Theme.of(context).textTheme.titleMedium!.copyWith(
                           color: Theme.of(context).colorScheme.onPrimary,
                         ),
                     maxLines: 1,
@@ -240,6 +240,9 @@ class _ChatScreenState extends ConsumerState<ChatScreen>
                     ],
                   ),
                   hintText: "Type a message...",
+                  hintStyle: Theme.of(context).textTheme.bodySmall!.copyWith(
+                        color: Colors.grey,
+                      ),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(30),
                   ),

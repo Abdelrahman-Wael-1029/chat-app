@@ -1,14 +1,20 @@
 class ContactModel {
-  late String id;
-  late String name;
-  late String phone;
-  late String? image;
+  String id;
+  String name;
+  String phone;
+  String? image;
+  String? lastMessage;
+  String? time;
+  bool? isOnline = false;
 
   ContactModel({
     required this.id,
     required this.name,
     required this.phone,
     this.image,
+    this.lastMessage,
+    this.time,
+    this.isOnline = false,
   });
 
   factory ContactModel.fromJson(Map<String, dynamic> json) {
@@ -17,6 +23,9 @@ class ContactModel {
       name: json['name'],
       phone: json['phone'],
       image: json['image'],
+      lastMessage: json['lastMessage'],
+      time: json['time'],
+      isOnline: json['isOnline'] ?? false,
     );
   }
 
@@ -26,11 +35,14 @@ class ContactModel {
       'name': name,
       'phone': phone,
       'image': image,
+      'lastMessage': lastMessage,
+      'time': time,
+      'isOnline': isOnline,
     };
   }
 
   @override
   String toString() {
-    return 'ContactModel{id: $id, name: $name, phone: $phone, image: $image}';
+    return 'ContactModel{id: $id, name: $name, phone: $phone, image: $image, lastMessage: $lastMessage, time: $time, isOnline: $isOnline}';
   }
 }
