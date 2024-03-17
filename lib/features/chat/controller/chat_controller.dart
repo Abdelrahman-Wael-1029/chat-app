@@ -1,5 +1,6 @@
 import 'package:chat_app/features/chat/repository/chat_repository.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../models/contact.dart';
 import '../../../models/message.dart';
 
 var chatControllerProvider = Provider((ref) {
@@ -27,5 +28,10 @@ class ChatController {
       context: context,
       message: message,
     );
+  }
+
+  Stream<List<ContactModel>> getContacts() {
+    var contacts = chatRepository.getContacts();
+    return contacts;
   }
 }

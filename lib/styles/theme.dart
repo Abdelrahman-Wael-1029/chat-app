@@ -24,6 +24,7 @@ ThemeData lightTheme = ThemeData(
 
   ),
   appBarTheme: AppBarTheme(
+    surfaceTintColor: Colors.transparent,
     backgroundColor: LightColors.appBarBackgroundColor,
     systemOverlayStyle: SystemUiOverlayStyle(
       statusBarColor: LightColors.appBarBackgroundColor,
@@ -71,6 +72,7 @@ ThemeData darkTheme = ThemeData(
 
   ),
   appBarTheme: AppBarTheme(
+    surfaceTintColor: Colors.transparent,
     backgroundColor: DarkColors.appBarBackgroundColor,
     systemOverlayStyle: SystemUiOverlayStyle(
       statusBarColor: DarkColors.appBarBackgroundColor,
