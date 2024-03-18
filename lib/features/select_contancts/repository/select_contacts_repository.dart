@@ -32,7 +32,7 @@ class SelectContactsRepository {
       for (var contact in getContacts) {
         var user = _isFound(contact, users);
         var myContact = ContactModel(
-          id: "",
+          id: contact.id,
           name: contact.displayName,
           phone: contact.phones[0].number.replaceAll(' ', ''),
           image: user != null ? user['image'] : null,

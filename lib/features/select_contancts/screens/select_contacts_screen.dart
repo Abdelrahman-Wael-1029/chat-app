@@ -1,4 +1,5 @@
 import 'package:chat_app/common/widgets/new_contact.dart';
+import 'package:chat_app/widgets/contacts_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -57,32 +58,7 @@ class SelectContactsScreen extends ConsumerWidget {
                 ),
                 contacts.when(
                   data: (data) {
-                    return ListView.builder(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemCount: data.length,
-                      itemBuilder: (context, index) {
-                        var image = data[index].image;
-                        return NewContact(
-                          title: data[index].name ?? "",
-                          icon: image == null ? Icons.person : null,
-                          backgroundImage: image != null
-                              ? NetworkImage(
-                                  image,
-                                )
-                              : null,
-                          onTap: () {
-                            print(data[index].id);
-                            ref
-                                .read(selectContactsControllerProvider)
-                                .selectContact(
-                                  context,
-                                  data[index].id,
-                                );
-                          },
-                        );
-                      },
-                    );
+                    return ContactsList(data: data, isScrollable: false,);
                   },
                   error: (error, stack) => Text(
                     error.toString(),
