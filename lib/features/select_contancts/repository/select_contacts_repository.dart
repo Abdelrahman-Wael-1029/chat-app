@@ -1,6 +1,3 @@
-import 'dart:convert';
-import 'dart:typed_data';
-
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:chat_app/common/utils/show_awesome_dialog.dart';
 import 'package:chat_app/models/contact.dart';
@@ -32,7 +29,7 @@ class SelectContactsRepository {
       for (var contact in getContacts) {
         var user = _isFound(contact, users);
         var myContact = ContactModel(
-          id: "",
+          id: contact.id,
           name: contact.displayName,
           phone: contact.phones[0].number.replaceAll(' ', ''),
           image: user != null ? user['image'] : null,

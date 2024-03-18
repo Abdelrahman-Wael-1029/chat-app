@@ -9,9 +9,12 @@ ThemeData lightTheme = ThemeData(
     background: LightColors.background,
     onBackground: LightColors.textColor,
     primary: LightColors.primaryColor,
+    onPrimary: Colors.white,
     brightness: Brightness.light,
     secondary: LightColors.secondaryColor,
+    onSecondary: Colors.white,
     tertiary: LightColors.tertiaryColor,
+    surface: LightColors.primaryColor,
   ),
   inputDecorationTheme: InputDecorationTheme(
     fillColor: LightColors.textFieldColor,
@@ -53,6 +56,13 @@ ThemeData lightTheme = ThemeData(
     foregroundColor: LightColors.iconColor,
   ),
   dividerColor: Colors.grey,
+  primaryColor: LightColors.primaryColor,
+  primaryColorLight: LightColors.primaryColor,
+  primaryIconTheme: IconThemeData(
+    color: LightColors.iconColor,
+  ),
+
+
 
 );
 
@@ -63,9 +73,14 @@ ThemeData darkTheme = ThemeData(
     background: DarkColors.background,
     onBackground: DarkColors.textColor,
     primary: DarkColors.primaryColor,
+    onPrimary: DarkColors.textColor,
     brightness: Brightness.light,
     secondary: DarkColors.secondaryColor,
+    onSecondary: DarkColors.textColor,
     tertiary: DarkColors.tertiaryColor,
+    surface: DarkColors.primaryColor,
+    onSecondaryContainer: DarkColors.textColor,
+    onSurfaceVariant: DarkColors.textColor,
   ),
   bottomNavigationBarTheme: BottomNavigationBarThemeData(
     backgroundColor: DarkColors.appBarBackgroundColor,
@@ -114,6 +129,13 @@ ThemeData darkTheme = ThemeData(
     suffixIconColor: DarkColors.iconColor,
 
   ),
+
+  primaryColor: DarkColors.primaryColor,
+  primaryColorLight: DarkColors.primaryColor,
+  primaryIconTheme: IconThemeData(
+    color: DarkColors.iconColor,
+  ),
+
 );
 
 

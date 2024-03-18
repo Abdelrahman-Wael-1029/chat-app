@@ -54,4 +54,8 @@ class AuthController {
   Future<UserModel?> getUserData() async{
     return await authRepository.getUserData();
   }
+
+  void setUserOnline(bool isOnline){
+    authRepository.setUserOnline(isOnline);
+  }
 }
