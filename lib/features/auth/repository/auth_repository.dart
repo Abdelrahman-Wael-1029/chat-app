@@ -109,16 +109,23 @@ class AuthRepository {
         return null;
       }
       print(auth.currentUser!.uid);
-      DocumentSnapshot<Map<String, dynamic>> user = await store.collection(
-          'users').doc(auth.currentUser!.uid).get();
+      DocumentSnapshot<Map<String, dynamic>> user =
+          await store.collection('users').doc(auth.currentUser!.uid).get();
 
-      if(user.data() != null){
+      if (user.data() != null) {
         return UserModel.fromJson(user.data()!);
       }
       return null;
-    }catch(e){
+    } catch (e) {
       print(e.toString());
       return null;
     }
+  }
+
+  void setUserOnline(bool isOnline) async {
+    print("i am online : $isOnline");
+    await store.collection('users').doc(auth.currentUser!.uid).update({
+      'isOnline': isOnline,
+    });
   }
 }
