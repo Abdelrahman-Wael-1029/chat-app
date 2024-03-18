@@ -11,14 +11,14 @@ import '../features/select_contancts/controller/select_contacts_controller.dart'
 class ContactsList extends ConsumerWidget {
   List<ContactModel> data;
 
-  Function()? onTap;
+  Function(int)? onTapIndex;
 
   bool isScrollable;
 
   ContactsList({
     super.key,
     required this.data,
-    this.onTap,
+    this.onTapIndex,
     this.isScrollable = true,
   });
 
@@ -26,18 +26,19 @@ class ContactsList extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return ListView.separated(
       shrinkWrap: true,
-      physics: isScrollable ? const BouncingScrollPhysics() : const NeverScrollableScrollPhysics(),
+      physics: isScrollable
+          ? const BouncingScrollPhysics()
+          : const NeverScrollableScrollPhysics(),
       itemBuilder: (context, index) {
         return ListTile(
           contentPadding: const EdgeInsets.all(0),
           leading: CircleAvatar(
               radius: 30,
-              backgroundImage: NetworkImage(data[index].image?? ""),
-
+              backgroundImage: NetworkImage(data[index].image ?? ""),
               onBackgroundImageError: (exception, stackTrace) {}),
           title: Text(
             data[index].name,
-            style: Theme.of(context).textTheme.titleLarge!,
+            style: Theme.of(context).textTheme.titleLarge,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
           ),
@@ -57,13 +58,9 @@ class ContactsList extends ConsumerWidget {
                 ),
           ),
           onTap: () {
-
-            ref
-                .read(selectContactsControllerProvider)
-                .selectContact(
-              context,
-              data[index].id,
-            );
+            if(onTapIndex != null) {
+              onTapIndex!(index);
+            }
           },
         );
       },

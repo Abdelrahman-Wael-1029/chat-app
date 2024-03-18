@@ -58,13 +58,24 @@ class SelectContactsScreen extends ConsumerWidget {
                 ),
                 contacts.when(
                   data: (data) {
-                    return ContactsList(data: data, isScrollable: false,);
+                    return ContactsList(
+                      data: data,
+                      isScrollable: false,
+                      onTapIndex: (index) {
+                        ref
+                            .read(selectContactsControllerProvider)
+                            .selectContact(
+                              context,
+                              data[index].id,
+                            );
+                      },
+                    );
                   },
                   error: (error, stack) => Text(
                     error.toString(),
                     style: Theme.of(context).textTheme.headlineMedium,
                   ),
-                  loading: () => Loading(),
+                  loading: () => const Loading(),
                 ),
               ],
             ),

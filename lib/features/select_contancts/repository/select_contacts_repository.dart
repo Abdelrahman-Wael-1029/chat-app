@@ -1,6 +1,3 @@
-import 'dart:convert';
-import 'dart:typed_data';
-
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:chat_app/common/utils/show_awesome_dialog.dart';
 import 'package:chat_app/models/contact.dart';
