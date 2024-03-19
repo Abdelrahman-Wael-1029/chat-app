@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../features/chat/controller/chat_controller.dart';
 import '../features/chat/screens/chat_screen.dart';
+import '../features/select_contancts/controller/select_contacts_controller.dart';
 import '../features/select_contancts/screens/select_contacts_screen.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
@@ -73,13 +74,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
               child: ContactsList(
                 data: snapshot.data!,
                 onTapIndex: (index) {
-                  Navigator.pushNamed(context, ChatScreen.route, arguments: {
-                    'name': snapshot.data![index].name,
-                    'imageUrl': snapshot.data![index].image,
-                    'isOnline': snapshot.data![index].isOnline,
-                    'uid': snapshot.data![index].id,
-                  });
+                  ref
+                      .read(selectContactsControllerProvider)
+                      .selectContact(
+                    context,
+                    snapshot.data![index].id,
+                  );
                 },
+
               ),
             );
           },

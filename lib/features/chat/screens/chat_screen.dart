@@ -91,6 +91,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen>
 
   @override
   Widget build(BuildContext context) {
+    print("online screeeen ${widget.isOnline}");
     var chatController = ref.read(chatControllerProvider);
     final messages = chatController.getMessages(receiverId: widget.uid);
 
