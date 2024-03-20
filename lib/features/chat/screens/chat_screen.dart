@@ -1,12 +1,17 @@
+import 'dart:io';
 import 'dart:math';
 
 import 'package:chat_app/common/widgets/error.dart';
 import 'package:chat_app/models/message.dart';
+import 'package:chat_app/screens/show_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:image_picker/image_picker.dart';
 
+import '../../../common/widgets/enum_message.dart';
 import '../../../common/widgets/icon.dart';
 import '../../../common/widgets/loading.dart';
 import '../../../styles/colors.dart';
@@ -15,10 +20,10 @@ import '../controller/chat_controller.dart';
 class ChatScreen extends ConsumerStatefulWidget {
   ChatScreen({
     super.key,
-      required this.name,
-      required this.imageUrl,
-      required this.isOnline,
-      required this.uid,
+    required this.name,
+    required this.imageUrl,
+    required this.isOnline,
+    required this.uid,
   });
 
   static const String route = '/chat';
@@ -91,7 +96,6 @@ class _ChatScreenState extends ConsumerState<ChatScreen>
 
   @override
   Widget build(BuildContext context) {
-    print("online screeeen ${widget.isOnline}");
     var chatController = ref.read(chatControllerProvider);
     final messages = chatController.getMessages(receiverId: widget.uid);
 
@@ -231,11 +235,44 @@ class _ChatScreenState extends ConsumerState<ChatScreen>
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       IconButton(
-                        onPressed: () {},
+                        onPressed: () async {
+                          final XFile? media = await ImagePicker().pickMedia();
+                          if (media != null) {
+                            chatController.setMessages(
+                              context: context,
+                              message: MessageModel(
+                                message: media.path,
+                                senderId:
+                                    FirebaseAuth.instance.currentUser!.uid,
+                                receiverId: widget.uid,
+                                time: DateTime.now().toString(),
+                                isRead: false,
+                                messageType: MessageType.file,
+                              ),
+                            );
+                          }
+                        },
                         icon: const Icon(Icons.attach_file),
                       ),
                       IconButton(
-                        onPressed: () {},
+                        onPressed: () async {
+                          final XFile? photo = await ImagePicker()
+                              .pickImage(source: ImageSource.camera);
+                          if (photo != null) {
+                            chatController.setMessages(
+                              context: context,
+                              message: MessageModel(
+                                message: photo.path,
+                                senderId:
+                                    FirebaseAuth.instance.currentUser!.uid,
+                                receiverId: widget.uid,
+                                time: DateTime.now().toString(),
+                                isRead: false,
+                                messageType: MessageType.image,
+                              ),
+                            );
+                          }
+                        },
                         icon: const Icon(Icons.camera_alt),
                       ),
                     ],
@@ -271,7 +308,6 @@ class _ChatScreenState extends ConsumerState<ChatScreen>
   }
 
   void sendMessage(chatController) {
-    if (textController.text.isEmpty) return;
     chatController
         .setMessages(
       context: context,
@@ -326,17 +362,61 @@ class _ChatScreenState extends ConsumerState<ChatScreen>
               ),
             ),
             child: SizedBox(
-              child: Text(
-                message.message,
-                style: Theme.of(context).textTheme.bodyMedium,
-                maxLines: 10,
-                overflow: TextOverflow.ellipsis,
-              ),
+              child: getMessage(message),
             ),
           ),
         ),
       ],
     );
+  }
+
+  Widget getMessage(MessageModel message) {
+    switch (message.messageType) {
+      case MessageType.text:
+        return getTextMessage(message);
+      case MessageType.image:
+        return getImageMessage(message);
+      case MessageType.video:
+        return Text('Video');
+      case MessageType.audio:
+        return Text('Audio');
+      case MessageType.file:
+        return getFileMessage(message);
+      case MessageType.GIF:
+        return Text('GIF');
+    }
+  }
+
+  Widget getTextMessage(MessageModel message) {
+    return Text(
+      message.message,
+      style: Theme.of(context).textTheme.bodyMedium,
+      maxLines: 10,
+      overflow: TextOverflow.ellipsis,
+    );
+  }
+
+  Widget getImageMessage(MessageModel message) {
+    return InkWell(
+      onTap: (){
+        Navigator.pushNamed(context, ShowImage.route, arguments: message.message);
+      },
+      child: Image.network(
+        message.message,
+        fit: BoxFit.fill,
+        width: double.infinity,
+      ),
+    );
+  }
+
+  Widget getFileMessage(MessageModel message) {
+    File file = File(message.message);
+     return Text(
+        file.path.split('/').last,
+        style: Theme.of(context).textTheme.bodyMedium,
+        maxLines: 10,
+        overflow: TextOverflow.ellipsis,
+      );
   }
 
   Widget otherMessage(context, MessageModel message) {
@@ -363,10 +443,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen>
                 topEnd: Radius.circular(10),
               ),
             ),
-            child: Text(
-              message.message,
-              style: Theme.of(context).textTheme.bodyMedium,
-            ),
+            child: getMessage(message),
           ),
         ),
       ],

@@ -3,6 +3,7 @@ import 'package:chat_app/features/auth/screens/user_info.dart';
 import 'package:chat_app/features/chat/screens/chat_screen.dart';
 import 'package:chat_app/features/landing/screens/landing_screen.dart';
 import 'package:chat_app/screens/home_layout.dart';
+import 'package:chat_app/screens/show_image.dart';
 import 'package:flutter/material.dart';
 
 import 'features/auth/screens/login.dart';
@@ -37,9 +38,11 @@ class Routers {
         return MaterialPageRoute(
             builder: (context) =>
                 OTPScreen(verificationId: settings.arguments as String));
+      case ShowImage.route:
+        return MaterialPageRoute(
+            builder: (context) =>
+                ShowImage(src: settings.arguments as String));
       default:
-        // remove the all the above case and add this
-
         return MaterialPageRoute(
             builder: (context) =>
                 ErrorScreen(error: "This page does not exist."));
