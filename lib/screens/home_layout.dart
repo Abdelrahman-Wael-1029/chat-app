@@ -55,6 +55,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
     return Scaffold(
         appBar: AppBar(
           title: const Text('Spark'),
+          actions: [
+            IconButton(
+              onPressed: () {
+                ref.read(authControllerProvider).signOut(context);
+              },
+              icon: const Icon(Icons.logout),
+            )
+          ],
         ),
         body: StreamBuilder(
           stream: ref.watch(chatControllerProvider).getContacts(),

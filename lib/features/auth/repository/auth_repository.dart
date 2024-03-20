@@ -2,7 +2,9 @@ import 'dart:io';
 
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:chat_app/common/repository/common_firebase_storage.dart';
+import 'package:chat_app/features/auth/screens/login.dart';
 import 'package:chat_app/models/user_model.dart';
+import 'package:chat_app/screens/home_layout.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -67,8 +69,14 @@ class AuthRepository {
       smsCode: smsCode,
     );
     await auth.signInWithCredential(phoneAuthCredential);
-    Navigator.pushNamedAndRemoveUntil(
+    var user = await store.collection('users').doc(auth.currentUser!.uid).get();
+    if (user.data() == null) {
+      Navigator.pushNamedAndRemoveUntil(
         context, UserInfoScreen.route, (route) => false);
+    } else {
+      Navigator.pushNamedAndRemoveUntil(
+        context, HomeScreen.route, (route) => false);
+    }
   }
 
   void saveUserData({
@@ -127,5 +135,10 @@ class AuthRepository {
     await store.collection('users').doc(auth.currentUser!.uid).update({
       'isOnline': isOnline,
     });
+  }
+
+  void signOut(context) {
+    auth.signOut();
+    Navigator.pushNamedAndRemoveUntil(context, LoginScreen.route, (route) => false);
   }
 }
