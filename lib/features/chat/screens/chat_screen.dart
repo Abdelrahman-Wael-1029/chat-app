@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:math';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chat_app/common/widgets/error.dart';
 import 'package:chat_app/models/message.dart';
 import 'package:chat_app/screens/show_image.dart';
@@ -398,25 +399,29 @@ class _ChatScreenState extends ConsumerState<ChatScreen>
 
   Widget getImageMessage(MessageModel message) {
     return InkWell(
-      onTap: (){
-        Navigator.pushNamed(context, ShowImage.route, arguments: message.message);
+      onTap: () {
+        Navigator.pushNamed(context, ShowImage.route,
+            arguments: message.message);
       },
-      child: Image.network(
-        message.message,
-        fit: BoxFit.fill,
+      child: CachedNetworkImage(
+        imageUrl: message.message,
+        placeholder: (context, url) => const Loading(),
+        errorWidget: (context, url, error) => const Icon(Icons.error),
+        fit: BoxFit.cover,
         width: double.infinity,
+        height: max(100, MediaQuery.of(context).size.width * 0.4),
       ),
     );
   }
 
   Widget getFileMessage(MessageModel message) {
     File file = File(message.message);
-     return Text(
-        file.path.split('/').last,
-        style: Theme.of(context).textTheme.bodyMedium,
-        maxLines: 10,
-        overflow: TextOverflow.ellipsis,
-      );
+    return Text(
+      file.path.split('/').last,
+      style: Theme.of(context).textTheme.bodyMedium,
+      maxLines: 10,
+      overflow: TextOverflow.ellipsis,
+    );
   }
 
   Widget otherMessage(context, MessageModel message) {
