@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../features/chat/screens/chat_screen.dart';
 import '../features/select_contancts/controller/select_contacts_controller.dart';
+import '../screens/show_image.dart';
 
 class ContactsList extends ConsumerWidget {
   List<ContactModel> data;
@@ -32,10 +33,18 @@ class ContactsList extends ConsumerWidget {
       itemBuilder: (context, index) {
         return ListTile(
           contentPadding: const EdgeInsets.all(0),
-          leading: CircleAvatar(
-              radius: 30,
-              backgroundImage: NetworkImage(data[index].image ?? ""),
-              onBackgroundImageError: (exception, stackTrace) {}),
+          leading: InkWell(
+            onTap: (){
+              if(data[index].image == null) {
+                return;
+              }
+              Navigator.pushNamed(context, ShowImage.route, arguments: data[index].image);
+            },
+            child: CircleAvatar(
+                radius: 30,
+                backgroundImage: NetworkImage(data[index].image ?? ""),
+                onBackgroundImageError: (exception, stackTrace) {}),
+          ),
           title: Text(
             data[index].name,
             style: Theme.of(context).textTheme.titleLarge,
