@@ -1,4 +1,7 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+
+import '../common/widgets/loading.dart';
 
 class ShowImage extends StatelessWidget {
   String src;
@@ -18,11 +21,14 @@ class ShowImage extends StatelessWidget {
        ),
       ),
       body: Center(
-        child: Image.network(src,
+        child: CachedNetworkImage(
+          imageUrl: src,
           width: double.infinity,
           height: double.infinity,
-          fit: BoxFit.fill,
-        )
+          fit: BoxFit.contain,
+          placeholder: (context, url) => Loading(),
+          errorWidget: (context, url, error) => const Icon(Icons.error),
+        ),
       )
     );
   }
