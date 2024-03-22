@@ -1,18 +1,14 @@
 import 'dart:io';
 import 'dart:math';
-
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chat_app/common/widgets/error.dart';
 import 'package:chat_app/features/chat/widget/text_message.dart';
+import 'package:chat_app/features/chat/widget/video_messsage.dart';
 import 'package:chat_app/models/message.dart';
-import 'package:chat_app/screens/show_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
-
 import '../../../common/widgets/enum_message.dart';
 import '../../../common/widgets/icon.dart';
 import '../../../common/widgets/loading.dart';
@@ -402,7 +398,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen>
       case MessageType.image:
         return ImageMessage(message: message);
       case MessageType.video:
-        return const Text('Video');
+        return VideoMessage(message: message,);
       case MessageType.audio:
         return const Text('Audio');
       case MessageType.file:
@@ -410,32 +406,6 @@ class _ChatScreenState extends ConsumerState<ChatScreen>
       case MessageType.GIF:
         return const Text('GIF');
     }
-  }
-
-  Widget getTextMessage(MessageModel message) {
-    return Text(
-      message.message,
-      style: Theme.of(context).textTheme.bodyMedium,
-      maxLines: 10,
-      overflow: TextOverflow.ellipsis,
-    );
-  }
-
-  Widget getImageMessage(MessageModel message) {
-    return InkWell(
-      onTap: () {
-        Navigator.pushNamed(context, ShowImage.route,
-            arguments: message.message);
-      },
-      child: CachedNetworkImage(
-        imageUrl: message.message,
-        placeholder: (context, url) => const Loading(),
-        errorWidget: (context, url, error) => const Icon(Icons.error),
-        fit: BoxFit.cover,
-        width: double.infinity,
-        height: max(100, MediaQuery.of(context).size.width * 0.4),
-      ),
-    );
   }
 
   Widget getFileMessage(MessageModel message) {

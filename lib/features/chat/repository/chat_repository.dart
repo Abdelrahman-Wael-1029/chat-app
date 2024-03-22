@@ -195,6 +195,8 @@ class ChatRepository {
         await sendFileMessage(context: context, message: message, file: file);
         break;
       case MessageType.video:
+        File file = File(message.message);
+        await sendFileMessage(context: context, message: message, file: file);
         break;
       case MessageType.audio:
         break;
