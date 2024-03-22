@@ -3,6 +3,7 @@ import 'dart:math';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chat_app/common/widgets/error.dart';
+import 'package:chat_app/features/chat/widget/text_message.dart';
 import 'package:chat_app/models/message.dart';
 import 'package:chat_app/screens/show_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -17,6 +18,7 @@ import '../../../common/widgets/icon.dart';
 import '../../../common/widgets/loading.dart';
 import '../../../styles/colors.dart';
 import '../controller/chat_controller.dart';
+import '../widget/image_message.dart';
 
 class ChatScreen extends ConsumerStatefulWidget {
   ChatScreen({
@@ -238,6 +240,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen>
                       IconButton(
                         onPressed: () async {
                           final XFile? media = await ImagePicker().pickMedia();
+                          File file = File(media!.path);
                           if (media != null) {
                             chatController.setMessages(
                               context: context,
@@ -255,26 +258,47 @@ class _ChatScreenState extends ConsumerState<ChatScreen>
                         },
                         icon: const Icon(Icons.attach_file),
                       ),
-                      IconButton(
-                        onPressed: () async {
-                          final XFile? photo = await ImagePicker()
-                              .pickImage(source: ImageSource.camera);
-                          if (photo != null) {
+                      InkWell(
+                        onLongPress: () async {
+                          // vedio
+                          final XFile? video = await ImagePicker()
+                              .pickVideo(source: ImageSource.gallery);
+                          if (video != null) {
                             chatController.setMessages(
                               context: context,
                               message: MessageModel(
-                                message: photo.path,
+                                message: video.path,
                                 senderId:
                                     FirebaseAuth.instance.currentUser!.uid,
                                 receiverId: widget.uid,
                                 time: DateTime.now().toString(),
                                 isRead: false,
-                                messageType: MessageType.image,
+                                messageType: MessageType.video,
                               ),
                             );
                           }
                         },
-                        icon: const Icon(Icons.camera_alt),
+                        child: IconButton(
+                          onPressed: () async {
+                            final XFile? photo = await ImagePicker()
+                                .pickImage(source: ImageSource.gallery);
+                            if (photo != null) {
+                              chatController.setMessages(
+                                context: context,
+                                message: MessageModel(
+                                  message: photo.path,
+                                  senderId:
+                                      FirebaseAuth.instance.currentUser!.uid,
+                                  receiverId: widget.uid,
+                                  time: DateTime.now().toString(),
+                                  isRead: false,
+                                  messageType: MessageType.image,
+                                ),
+                              );
+                            }
+                          },
+                          icon: const Icon(Icons.camera_alt),
+                        ),
                       ),
                     ],
                   ),
@@ -374,17 +398,17 @@ class _ChatScreenState extends ConsumerState<ChatScreen>
   Widget getMessage(MessageModel message) {
     switch (message.messageType) {
       case MessageType.text:
-        return getTextMessage(message);
+        return TextMessage(message: message);
       case MessageType.image:
-        return getImageMessage(message);
+        return ImageMessage(message: message);
       case MessageType.video:
-        return Text('Video');
+        return const Text('Video');
       case MessageType.audio:
-        return Text('Audio');
+        return const Text('Audio');
       case MessageType.file:
         return getFileMessage(message);
       case MessageType.GIF:
-        return Text('GIF');
+        return const Text('GIF');
     }
   }
 
