@@ -43,9 +43,7 @@ dependencies:
   flutter_contacts: ^1.1.7+1
   cached_network_image: ^3.3.1
   video_player: ^2.8.3
-  flick_video_player: ^0.7.0
-
-
+  chewie: ^1.7.5
 
 
   # The following adds the Cupertino Icons font to your application.
