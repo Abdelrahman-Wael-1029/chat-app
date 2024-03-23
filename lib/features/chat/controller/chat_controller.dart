@@ -1,4 +1,4 @@
-import 'package:chat_app/features/chat/repository/chat_repository.dart';
+import '../repository/chat_repository.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../models/contact.dart';
 import '../../../models/message.dart';

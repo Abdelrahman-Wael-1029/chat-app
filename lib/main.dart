@@ -1,14 +1,14 @@
-import 'package:chat_app/common/widgets/error.dart';
-import 'package:chat_app/common/widgets/loading.dart';
-import 'package:chat_app/features/auth/controller/auth_controller.dart';
-import 'package:chat_app/features/chat/screens/chat_screen.dart';
-import 'package:chat_app/features/landing/screens/landing_screen.dart';
-import 'package:chat_app/router.dart';
-import 'package:chat_app/screens/home_layout.dart';
-import 'package:chat_app/styles/theme.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import 'common/widgets/error.dart';
+import 'common/widgets/loading.dart';
+import 'features/auth/controller/auth_controller.dart';
+import 'features/landing/screens/landing_screen.dart';
+import 'router.dart';
+import 'screens/home_layout.dart';
+import 'styles/theme.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

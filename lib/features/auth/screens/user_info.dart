@@ -1,7 +1,7 @@
 import 'dart:io';
 
-import 'package:chat_app/common/widgets/buttons.dart';
-import 'package:chat_app/screens/home_layout.dart';
+import '../../../common/widgets/buttons.dart';
+import '../../../screens/home_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';

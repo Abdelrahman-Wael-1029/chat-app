@@ -1,5 +1,5 @@
-import 'package:chat_app/common/widgets/buttons.dart';
-import 'package:chat_app/features/auth/controller/auth_controller.dart';
+import '../../../common/widgets/buttons.dart';
+import '../controller/auth_controller.dart';
 import 'package:country_picker/country_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

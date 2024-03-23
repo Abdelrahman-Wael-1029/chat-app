@@ -1,4 +1,4 @@
-import 'package:chat_app/models/contact.dart';
+import '../../../models/contact.dart';
 import 'package:flutter_contacts/contact.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 

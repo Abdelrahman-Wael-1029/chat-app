@@ -47,7 +47,7 @@ class _VideoMessageState extends State<VideoMessage> {
   Widget build(BuildContext context) {
     return SizedBox(
       width: double.infinity,
-      height: max(200, MediaQuery.of(context).size.height * 0.3),
+      height: min(200, MediaQuery.of(context).size.height * 0.4),
       child: Chewie(controller: _chewieController),
     );
   }

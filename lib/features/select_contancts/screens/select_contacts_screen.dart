@@ -1,9 +1,9 @@
-import 'package:chat_app/common/widgets/new_contact.dart';
-import 'package:chat_app/widgets/contacts_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../common/widgets/loading.dart';
+import '../../../common/widgets/new_contact.dart';
+import '../../../widgets/contacts_list.dart';
 import '../controller/select_contacts_controller.dart';
 
 class SelectContactsScreen extends ConsumerWidget {
