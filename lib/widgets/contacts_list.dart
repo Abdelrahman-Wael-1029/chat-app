@@ -1,13 +1,13 @@
-import 'package:chat_app/common/widgets/error.dart';
-import 'package:chat_app/common/widgets/loading.dart';
-import 'package:chat_app/features/chat/controller/chat_controller.dart';
-import 'package:chat_app/models/contact.dart';
+import '../common/widgets/error.dart';
+import '../common/widgets/loading.dart';
+import '../features/chat/controller/chat_controller.dart';
+import '../models/contact.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../features/chat/screens/chat_screen.dart';
 import '../features/select_contancts/controller/select_contacts_controller.dart';
-import '../screens/show_image.dart';
+import '../common/screens/show_image.dart';
 
 class ContactsList extends ConsumerWidget {
   List<ContactModel> data;

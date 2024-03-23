@@ -1,6 +1,7 @@
-import 'package:chat_app/features/auth/controller/auth_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../controller/auth_controller.dart';
 
 class OTPScreen extends ConsumerWidget {
   static const String route = '/otp-verify';

@@ -1,8 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
-import '../common/widgets/loading.dart';
+import '../widgets/loading.dart';
 
+// ignore: must_be_immutable
 class ShowImage extends StatelessWidget {
   String src;
   static const String route = '/showImage';
@@ -14,7 +15,7 @@ class ShowImage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
        leading: IconButton(
-         icon: Icon(Icons.close),
+         icon: const Icon(Icons.close),
          onPressed: () {
            Navigator.pop(context);
          },
@@ -26,7 +27,7 @@ class ShowImage extends StatelessWidget {
           width: double.infinity,
           height: double.infinity,
           fit: BoxFit.contain,
-          placeholder: (context, url) => Loading(),
+          placeholder: (context, url) => const Loading(),
           errorWidget: (context, url, error) => const Icon(Icons.error),
         ),
       )

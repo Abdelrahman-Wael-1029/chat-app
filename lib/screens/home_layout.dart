@@ -1,5 +1,5 @@
-import 'package:chat_app/features/auth/controller/auth_controller.dart';
-import 'package:chat_app/widgets/contacts_list.dart';
+import '../features/auth/controller/auth_controller.dart';
+import '../widgets/contacts_list.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

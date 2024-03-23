@@ -1,9 +1,10 @@
 import 'dart:io';
 import 'dart:math';
-import 'package:chat_app/common/widgets/error.dart';
-import 'package:chat_app/features/chat/widget/text_message.dart';
-import 'package:chat_app/features/chat/widget/video_messsage.dart';
-import 'package:chat_app/models/message.dart';
+import '../../../common/widgets/error.dart';
+import '../widget/text_message.dart';
+import '../widget/video_messsage.dart';
+import '../../../models/message.dart';
+import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -40,7 +41,11 @@ class _ChatScreenState extends ConsumerState<ChatScreen>
   bool notEmpty = false;
   bool isKeyboardVisible = false;
   var textController = TextEditingController();
+  var emojiController = TextEditingController();
   var scrollController = ScrollController();
+  final _focusNode = FocusNode();
+  
+
 
   @override
   void dispose() {
@@ -93,12 +98,15 @@ class _ChatScreenState extends ConsumerState<ChatScreen>
     }
   }
 
+
   @override
   Widget build(BuildContext context) {
     var chatController = ref.read(chatControllerProvider);
     final messages = chatController.getMessages(receiverId: widget.uid);
 
     return Scaffold(
+      resizeToAvoidBottomInset: true,
+
       appBar: AppBar(
         titleSpacing: 0,
         surfaceTintColor: Colors.transparent,
@@ -205,6 +213,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen>
           children: [
             Expanded(
               child: TextField(
+                focusNode: _focusNode,
                 onSubmitted: (value) {
                   //   close the keyboard
                 },
@@ -227,7 +236,9 @@ class _ChatScreenState extends ConsumerState<ChatScreen>
                 textAlignVertical: TextAlignVertical.bottom,
                 decoration: InputDecoration(
                   prefixIcon: IconButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      showEmoji();
+                    },
                     icon: const Icon(Icons.emoji_emotions_outlined),
                   ),
                   suffixIcon: Row(
@@ -237,21 +248,20 @@ class _ChatScreenState extends ConsumerState<ChatScreen>
                         onPressed: () async {
                           final XFile? media = await ImagePicker().pickMedia();
                           File file = File(media!.path);
-                          if (media != null) {
-                            chatController.setMessages(
-                              context: context,
-                              message: MessageModel(
-                                message: media.path,
-                                senderId:
-                                    FirebaseAuth.instance.currentUser!.uid,
-                                receiverId: widget.uid,
-                                time: DateTime.now().toString(),
-                                isRead: false,
-                                messageType: MessageType.file,
-                              ),
-                            );
-                          }
-                        },
+                          // ignore: use_build_context_synchronously
+                          chatController.setMessages(
+                            context: context,
+                            message: MessageModel(
+                              message: media.path,
+                              senderId:
+                                  FirebaseAuth.instance.currentUser!.uid,
+                              receiverId: widget.uid,
+                              time: DateTime.now().toString(),
+                              isRead: false,
+                              messageType: MessageType.file,
+                            ),
+                          );
+                                                },
                         icon: const Icon(Icons.attach_file),
                       ),
                       InkWell(
@@ -260,6 +270,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen>
                           final XFile? video = await ImagePicker()
                               .pickVideo(source: ImageSource.gallery);
                           if (video != null) {
+                            // ignore: use_build_context_synchronously
                             chatController.setMessages(
                               context: context,
                               message: MessageModel(
@@ -279,6 +290,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen>
                             final XFile? photo = await ImagePicker()
                                 .pickImage(source: ImageSource.gallery);
                             if (photo != null) {
+                              // ignore: use_build_context_synchronously
                               chatController.setMessages(
                                 context: context,
                                 message: MessageModel(
@@ -398,7 +410,9 @@ class _ChatScreenState extends ConsumerState<ChatScreen>
       case MessageType.image:
         return ImageMessage(message: message);
       case MessageType.video:
-        return VideoMessage(message: message,);
+        return VideoMessage(
+          message: message,
+        );
       case MessageType.audio:
         return const Text('Audio');
       case MessageType.file:
@@ -448,4 +462,45 @@ class _ChatScreenState extends ConsumerState<ChatScreen>
       ],
     );
   }
+
+  void showEmoji() {
+    emojiController.clear();
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return EmojiPicker(
+          onEmojiSelected: (category, emoji) {
+            textController.text += emoji.emoji;
+            emojiController.text += emoji.emoji;
+          },
+
+          textEditingController: emojiController,
+          config: Config(
+              categoryViewConfig: CategoryViewConfig(
+                backgroundColor: Theme.of(context).appBarTheme.backgroundColor!,
+                iconColor: Theme.of(context).iconTheme.color!,
+                indicatorColor: Colors.white,
+                iconColorSelected: Colors.white,
+              ),
+              emojiViewConfig: EmojiViewConfig(
+                backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+              ),
+              checkPlatformCompatibility: true,
+              bottomActionBarConfig: BottomActionBarConfig(
+                backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+                showSearchViewButton: false,
+                showBackspaceButton: true,
+                enabled: false,
+                
+               
+
+              )),
+        );
+      },
+    ).whenComplete(() {
+    _focusNode.requestFocus();
+
+    });
+  }
+
 }

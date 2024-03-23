@@ -1,11 +1,11 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
-import 'package:chat_app/common/utils/show_awesome_dialog.dart';
-import 'package:chat_app/models/contact.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_contacts/flutter_contacts.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../common/utils/show_awesome_dialog.dart';
+import '../../../models/contact.dart';
 import '../../chat/screens/chat_screen.dart';
 
 final selectContactsRepositoryProvider = Provider(
