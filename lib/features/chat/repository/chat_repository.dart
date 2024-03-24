@@ -85,7 +85,6 @@ class ChatRepository {
   }
 
   Future<void> sendTextMessage({required context, required message}) async {
-    print(message);
 
     await store.runTransaction((transaction) async {
 

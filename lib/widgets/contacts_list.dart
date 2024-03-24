@@ -1,14 +1,9 @@
-import '../common/widgets/error.dart';
-import '../common/widgets/loading.dart';
-import '../features/chat/controller/chat_controller.dart';
 import '../models/contact.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import '../features/chat/screens/chat_screen.dart';
-import '../features/select_contancts/controller/select_contacts_controller.dart';
 import '../common/screens/show_image.dart';
 
+// ignore: must_be_immutable
 class ContactsList extends ConsumerWidget {
   List<ContactModel> data;
 

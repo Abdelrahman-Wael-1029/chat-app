@@ -1,5 +1,7 @@
 import 'dart:io';
 import 'dart:math';
+import 'package:flutter/services.dart';
+
 import '../../../common/widgets/error.dart';
 import '../widget/text_message.dart';
 import '../widget/video_messsage.dart';
@@ -17,6 +19,7 @@ import '../../../styles/colors.dart';
 import '../controller/chat_controller.dart';
 import '../widget/image_message.dart';
 
+// ignore: must_be_immutable
 class ChatScreen extends ConsumerStatefulWidget {
   ChatScreen({
     super.key,
@@ -36,22 +39,19 @@ class ChatScreen extends ConsumerStatefulWidget {
   ConsumerState<ChatScreen> createState() => _ChatScreenState();
 }
 
-class _ChatScreenState extends ConsumerState<ChatScreen>
-    with WidgetsBindingObserver {
+class _ChatScreenState extends ConsumerState<ChatScreen> {
   bool notEmpty = false;
   bool isKeyboardVisible = false;
   var textController = TextEditingController();
   var emojiController = TextEditingController();
   var scrollController = ScrollController();
   final _focusNode = FocusNode();
-  
-
+  bool showEmoji = false;
 
   @override
   void dispose() {
     textController.dispose();
     scrollController.dispose();
-    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
 
@@ -65,39 +65,14 @@ class _ChatScreenState extends ConsumerState<ChatScreen>
         }
       });
     });
-    WidgetsBinding.instance.addObserver(this);
-  }
-
-  @override
-  void didChangeMetrics() {
-    super.didChangeMetrics();
-    final bottomInset = MediaQuery.of(context).viewInsets.bottom;
-    final newIsKeyboardVisible = bottomInset > 0.0;
-
-    // If the keyboard visibility has changed, update the state
-    if (isKeyboardVisible != newIsKeyboardVisible) {
-      setState(() {
-        isKeyboardVisible = newIsKeyboardVisible;
-      });
-
-      // Perform your actions here
-      if (isKeyboardVisible) {
-        print('Keyboard opened');
-        // make scroll by the height of the keyboard
-        print(bottomInset);
-        scrollController.animateTo(
-          scrollController.position.pixels + bottomInset,
-          duration: const Duration(milliseconds: 100),
-          curve: Curves.easeInOut,
-        );
-        // Add your action for keyboard open event
-      } else {
-        print('Keyboard closed');
-        // Add your action for keyboard close event
+    _focusNode.addListener(() {
+      if (_focusNode.hasFocus) {
+        setState(() {
+          showEmoji = false;
+        });
       }
-    }
+    });
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -106,7 +81,6 @@ class _ChatScreenState extends ConsumerState<ChatScreen>
 
     return Scaffold(
       resizeToAvoidBottomInset: true,
-
       appBar: AppBar(
         titleSpacing: 0,
         surfaceTintColor: Colors.transparent,
@@ -207,133 +181,178 @@ class _ChatScreenState extends ConsumerState<ChatScreen>
       ),
       bottomNavigationBar: Container(
         padding: EdgeInsets.only(
-          bottom: max(5, MediaQuery.of(context).viewInsets.bottom),
+          bottom: max(5, (MediaQuery.of(context).viewInsets.bottom)),
         ),
-        child: Row(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
-            Expanded(
-              child: TextField(
-                focusNode: _focusNode,
-                onSubmitted: (value) {
-                  //   close the keyboard
-                },
-                keyboardType: TextInputType.text,
-                controller: textController,
-                textDirection: TextDirection.ltr,
-                maxLines: 5,
-                minLines: 1,
-                onChanged: (value) {
-                  if (value.isNotEmpty) {
-                    setState(() {
-                      notEmpty = true;
-                    });
-                  } else {
-                    setState(() {
-                      notEmpty = false;
-                    });
-                  }
-                },
-                textAlignVertical: TextAlignVertical.bottom,
-                decoration: InputDecoration(
-                  prefixIcon: IconButton(
-                    onPressed: () {
-                      showEmoji();
+            Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    focusNode: _focusNode,
+                    onSubmitted: (value) {
+                      //   close the keyboard
                     },
-                    icon: const Icon(Icons.emoji_emotions_outlined),
-                  ),
-                  suffixIcon: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      IconButton(
+                    keyboardType: TextInputType.text,
+                    controller: textController,
+                    textDirection: TextDirection.ltr,
+                    maxLines: 5,
+                    minLines: 1,
+                    onChanged: (value) {
+                      if (value.isNotEmpty) {
+                        setState(() {
+                          notEmpty = true;
+                        });
+                      } else {
+                        setState(() {
+                          notEmpty = false;
+                        });
+                      }
+                    },
+                    textAlignVertical: TextAlignVertical.bottom,
+                    decoration: InputDecoration(
+                      prefixIcon: IconButton(
                         onPressed: () async {
-                          final XFile? media = await ImagePicker().pickMedia();
-                          File file = File(media!.path);
-                          // ignore: use_build_context_synchronously
-                          chatController.setMessages(
-                            context: context,
-                            message: MessageModel(
-                              message: media.path,
-                              senderId:
-                                  FirebaseAuth.instance.currentUser!.uid,
-                              receiverId: widget.uid,
-                              time: DateTime.now().toString(),
-                              isRead: false,
-                              messageType: MessageType.file,
-                            ),
-                          );
-                                                },
-                        icon: const Icon(Icons.attach_file),
-                      ),
-                      InkWell(
-                        onLongPress: () async {
-                          // vedio
-                          final XFile? video = await ImagePicker()
-                              .pickVideo(source: ImageSource.gallery);
-                          if (video != null) {
-                            // ignore: use_build_context_synchronously
-                            chatController.setMessages(
-                              context: context,
-                              message: MessageModel(
-                                message: video.path,
-                                senderId:
-                                    FirebaseAuth.instance.currentUser!.uid,
-                                receiverId: widget.uid,
-                                time: DateTime.now().toString(),
-                                isRead: false,
-                                messageType: MessageType.video,
-                              ),
-                            );
-                          }
+                          setState(() {
+                            showEmoji = !showEmoji;
+                          });
+                          await Future.delayed(
+                                  const Duration(milliseconds: 100))
+                              .then((value) {
+                            SystemChannels.textInput
+                                .invokeMethod('TextInput.hide');
+                          });
                         },
-                        child: IconButton(
-                          onPressed: () async {
-                            final XFile? photo = await ImagePicker()
-                                .pickImage(source: ImageSource.gallery);
-                            if (photo != null) {
+                        icon: const Icon(Icons.emoji_emotions_outlined),
+                      ),
+                      suffixIcon: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          IconButton(
+                            onPressed: () async {
+                              final XFile? media =
+                                  await ImagePicker().pickMedia();
+                              if (media == null) return;
                               // ignore: use_build_context_synchronously
                               chatController.setMessages(
                                 context: context,
                                 message: MessageModel(
-                                  message: photo.path,
+                                  message: media.path,
                                   senderId:
                                       FirebaseAuth.instance.currentUser!.uid,
                                   receiverId: widget.uid,
                                   time: DateTime.now().toString(),
                                   isRead: false,
-                                  messageType: MessageType.image,
+                                  messageType: MessageType.file,
                                 ),
                               );
-                            }
-                          },
-                          icon: const Icon(Icons.camera_alt),
-                        ),
+                            },
+                            icon: const Icon(Icons.attach_file),
+                          ),
+                          InkWell(
+                            onLongPress: () async {
+                              // vedio
+                              final XFile? video = await ImagePicker()
+                                  .pickVideo(source: ImageSource.gallery);
+                              if (video != null) {
+                                // ignore: use_build_context_synchronously
+                                chatController.setMessages(
+                                  context: context,
+                                  message: MessageModel(
+                                    message: video.path,
+                                    senderId:
+                                        FirebaseAuth.instance.currentUser!.uid,
+                                    receiverId: widget.uid,
+                                    time: DateTime.now().toString(),
+                                    isRead: false,
+                                    messageType: MessageType.video,
+                                  ),
+                                );
+                              }
+                            },
+                            child: IconButton(
+                              onPressed: () async {
+                                final XFile? photo = await ImagePicker()
+                                    .pickImage(source: ImageSource.gallery);
+                                if (photo != null) {
+                                  // ignore: use_build_context_synchronously
+                                  chatController.setMessages(
+                                    context: context,
+                                    message: MessageModel(
+                                      message: photo.path,
+                                      senderId: FirebaseAuth
+                                          .instance.currentUser!.uid,
+                                      receiverId: widget.uid,
+                                      time: DateTime.now().toString(),
+                                      isRead: false,
+                                      messageType: MessageType.image,
+                                    ),
+                                  );
+                                }
+                              },
+                              icon: const Icon(Icons.camera_alt),
+                            ),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
-                  hintText: "Type a message...",
-                  hintStyle: Theme.of(context).textTheme.bodySmall!.copyWith(
-                        color: Colors.grey,
+                      hintText: "Type a message...",
+                      hintStyle:
+                          Theme.of(context).textTheme.bodySmall!.copyWith(
+                                color: Colors.grey,
+                              ),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(30),
                       ),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30),
+                      contentPadding: const EdgeInsets.all(10),
+                    ),
                   ),
-                  contentPadding: const EdgeInsets.all(10),
                 ),
-              ),
+                (!notEmpty)
+                    ? outlineIcons(
+                        context: context,
+                        icon: const Icon(Icons.mic),
+                        onPressed: () {},
+                      )
+                    : outlineIcons(
+                        context: context,
+                        icon: const Icon(Icons.send),
+                        onPressed: () {
+                          sendMessage(chatController);
+                        },
+                      ),
+              ],
             ),
-            (!notEmpty)
-                ? outlineIcons(
-                    context: context,
-                    icon: const Icon(Icons.mic),
-                    onPressed: () {},
-                  )
-                : outlineIcons(
-                    context: context,
-                    icon: const Icon(Icons.send),
-                    onPressed: () {
-                      sendMessage(chatController);
-                    },
-                  ),
+            if (showEmoji)
+              EmojiPicker(
+                onEmojiSelected: (category, emoji) {
+                  textController.text += emoji.emoji;
+                  emojiController.text += emoji.emoji;
+                  checkEmptyTextField(textController.text);
+                },
+                textEditingController: emojiController,
+                config: Config(
+                    height: MediaQuery.of(context).size.height * 0.35,
+                    categoryViewConfig: CategoryViewConfig(
+                      backgroundColor:
+                          Theme.of(context).appBarTheme.backgroundColor!,
+                      iconColor: Theme.of(context).iconTheme.color!,
+                      indicatorColor: Colors.white,
+                      iconColorSelected: Colors.white,
+                    ),
+                    emojiViewConfig: EmojiViewConfig(
+                      backgroundColor:
+                          Theme.of(context).scaffoldBackgroundColor,
+                    ),
+                    checkPlatformCompatibility: true,
+                    bottomActionBarConfig: BottomActionBarConfig(
+                      backgroundColor:
+                          Theme.of(context).scaffoldBackgroundColor,
+                      showSearchViewButton: false,
+                      showBackspaceButton: true,
+                      enabled: false,
+                    )),
+              ),
           ],
         ),
       ),
@@ -355,10 +374,10 @@ class _ChatScreenState extends ConsumerState<ChatScreen>
         .then((value) {
       scrollToEnd();
     });
-    setState(() {
-      textController.clear();
-      notEmpty = false;
-    });
+
+    textController.clear();
+    emojiController.clear();
+    checkEmptyTextField(textController.text);
   }
 
   void scrollToEnd() {
@@ -463,44 +482,15 @@ class _ChatScreenState extends ConsumerState<ChatScreen>
     );
   }
 
-  void showEmoji() {
-    emojiController.clear();
-    showModalBottomSheet(
-      context: context,
-      builder: (context) {
-        return EmojiPicker(
-          onEmojiSelected: (category, emoji) {
-            textController.text += emoji.emoji;
-            emojiController.text += emoji.emoji;
-          },
-
-          textEditingController: emojiController,
-          config: Config(
-              categoryViewConfig: CategoryViewConfig(
-                backgroundColor: Theme.of(context).appBarTheme.backgroundColor!,
-                iconColor: Theme.of(context).iconTheme.color!,
-                indicatorColor: Colors.white,
-                iconColorSelected: Colors.white,
-              ),
-              emojiViewConfig: EmojiViewConfig(
-                backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-              ),
-              checkPlatformCompatibility: true,
-              bottomActionBarConfig: BottomActionBarConfig(
-                backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-                showSearchViewButton: false,
-                showBackspaceButton: true,
-                enabled: false,
-                
-               
-
-              )),
-        );
-      },
-    ).whenComplete(() {
-    _focusNode.requestFocus();
-
-    });
+  void checkEmptyTextField(String value) {
+    if (value.isNotEmpty) {
+      setState(() {
+        notEmpty = true;
+      });
+    } else {
+      setState(() {
+        notEmpty = false;
+      });
+    }
   }
-
 }

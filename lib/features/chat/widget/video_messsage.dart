@@ -6,12 +6,14 @@ import 'package:video_player/video_player.dart';
 
 import '../../../models/message.dart';
 
+// ignore: must_be_immutable
 class VideoMessage extends StatefulWidget {
   MessageModel message;
 
   VideoMessage({super.key, required this.message});
 
   @override
+  // ignore: library_private_types_in_public_api
   _VideoMessageState createState() => _VideoMessageState();
 }
 // build using Chewie
