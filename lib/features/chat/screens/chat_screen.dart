@@ -47,6 +47,8 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
   var scrollController = ScrollController();
   final _focusNode = FocusNode();
   bool showEmoji = false;
+  int indexEmojiAdd = 0;
+
 
   @override
   void dispose() {
@@ -216,6 +218,8 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                         onPressed: () async {
                           setState(() {
                             showEmoji = !showEmoji;
+                            // get index the fouse cursor
+                            indexEmojiAdd = textController.selection.baseOffset;
                           });
                           await Future.delayed(
                                   const Duration(milliseconds: 100))
@@ -326,8 +330,16 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
             if (showEmoji)
               EmojiPicker(
                 onEmojiSelected: (category, emoji) {
-                  textController.text += emoji.emoji;
-                  emojiController.text += emoji.emoji;
+                  textController.text = textController.text.substring(0, indexEmojiAdd) +
+                      emoji.emoji +
+                      textController.text.substring(indexEmojiAdd);
+
+                  textController.selection = TextSelection.fromPosition(
+                    TextPosition(offset: indexEmojiAdd + emoji.emoji.length),
+                  );
+
+                  indexEmojiAdd += emoji.emoji.length;
+
                   checkEmptyTextField(textController.text);
                 },
                 textEditingController: emojiController,
@@ -358,6 +370,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
       ),
     );
   }
+
 
   void sendMessage(chatController) {
     chatController
