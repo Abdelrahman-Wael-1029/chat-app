@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../controller/auth_controller.dart';
 
+// ignore: must_be_immutable
 class OTPScreen extends ConsumerWidget {
   static const String route = '/otp-verify';
   String verificationId;

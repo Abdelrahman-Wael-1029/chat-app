@@ -1,11 +1,9 @@
 import '../features/auth/controller/auth_controller.dart';
 import '../widgets/contacts_list.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../features/chat/controller/chat_controller.dart';
-import '../features/chat/screens/chat_screen.dart';
 import '../features/select_contancts/controller/select_contacts_controller.dart';
 import '../features/select_contancts/screens/select_contacts_screen.dart';
 

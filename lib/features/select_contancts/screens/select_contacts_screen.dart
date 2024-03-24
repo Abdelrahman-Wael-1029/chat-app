@@ -24,6 +24,7 @@ class SelectContactsScreen extends ConsumerWidget {
         padding: const EdgeInsets.all(20.0),
         child: RefreshIndicator(
           onRefresh: () async {
+            // ignore: unused_result
             ref.refresh(getContactsControllerProvider);
           },
           child: SingleChildScrollView(

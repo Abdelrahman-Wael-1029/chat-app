@@ -37,7 +37,6 @@ class MyApp extends ConsumerWidget {
       themeMode: ThemeMode.system,
       home: ref.watch(authGetCurrentUserProvider).when(
         data: (user) {
-
           if (user == null) {
             return const LandingScreen();
           } else {

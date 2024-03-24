@@ -1,13 +1,15 @@
 import 'dart:math';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:chat_app/models/message.dart';
 import 'package:flutter/material.dart';
 
 import '../../../common/widgets/loading.dart';
 import '../../../common/screens/show_image.dart';
 
+// ignore: must_be_immutable
 class ImageMessage extends StatelessWidget {
-  var message;
+  MessageModel message;
 
   ImageMessage({super.key, required this.message});
 
