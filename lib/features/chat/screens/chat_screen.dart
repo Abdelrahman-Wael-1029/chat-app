@@ -332,7 +332,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                 onEmojiSelected: (category, emoji) {
                   textController.text = textController.text.substring(0, indexEmojiAdd) +
                       emoji.emoji +
-                      textController.text.substring(indexEmojiAdd);
+                      ((indexEmojiAdd==0)?textController.text.substring(indexEmojiAdd):"");
 
                   textController.selection = TextSelection.fromPosition(
                     TextPosition(offset: indexEmojiAdd + emoji.emoji.length),
