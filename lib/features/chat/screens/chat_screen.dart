@@ -450,8 +450,6 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
         return const Text('Audio');
       case MessageType.file:
         return getFileMessage(message);
-      case MessageType.GIF:
-        return const Text('GIF');
     }
   }
 

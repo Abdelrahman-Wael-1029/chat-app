@@ -133,9 +133,6 @@ class ChatRepository {
       case MessageType.file:
         lastMessage = 'File 📁';
         break;
-      case MessageType.GIF:
-        lastMessage = 'GIF ';
-        break;
     }
     await store
         .collection('users')
@@ -202,8 +199,6 @@ class ChatRepository {
       case MessageType.file:
         File file = File(message.message);
         await sendFileMessage(context: context, message: message, file: file);
-        break;
-      case MessageType.GIF:
         break;
     }
   }
