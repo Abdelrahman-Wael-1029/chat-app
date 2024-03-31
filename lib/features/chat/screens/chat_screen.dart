@@ -1,6 +1,9 @@
 import 'dart:io';
 import 'dart:math';
-import 'package:flutter/services.dart';
+import 'package:chat_app/features/chat/widget/audio_message.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:record/record.dart';
+import 'package:uuid/uuid.dart';
 
 import '../../../common/widgets/error.dart';
 import '../widget/text_message.dart';
@@ -46,6 +49,8 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
   final _focusNode = FocusNode();
   bool showEmoji = false;
   int indexEmojiAdd = 0;
+  var record = AudioRecorder();
+  bool isRecording = false;
 
   @override
   void dispose() {
@@ -313,19 +318,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                       ),
                     ),
                   ),
-                  (!notEmpty)
-                      ? outlineIcons(
-                          context: context,
-                          icon: const Icon(Icons.mic),
-                          onPressed: () {},
-                        )
-                      : outlineIcons(
-                          context: context,
-                          icon: const Icon(Icons.send),
-                          onPressed: () {
-                            sendMessage(chatController);
-                          },
-                        ),
+                  send(),
                 ],
               ),
               if (showEmoji) const SizedBox(height: 10),
@@ -335,7 +328,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                     textController.text =
                         textController.text.substring(0, indexEmojiAdd) +
                             emoji.emoji +
-                                textController.text.substring(indexEmojiAdd);
+                            textController.text.substring(indexEmojiAdd);
 
                     textController.selection = TextSelection.fromPosition(
                       TextPosition(offset: indexEmojiAdd + emoji.emoji.length),
@@ -447,11 +440,13 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
           message: message,
         );
       case MessageType.audio:
-        return const Text('Audio');
+        return AudioMessage(
+          message: message,
+        );
+        return Text(message.message);
+
       case MessageType.file:
         return getFileMessage(message);
-      case MessageType.GIF:
-        return const Text('GIF');
     }
   }
 
@@ -496,6 +491,40 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
     );
   }
 
+  void startRecord() async {
+    setState(() {
+      isRecording = true;
+    });
+    var location = await getApplicationDocumentsDirectory();
+    var path = '${location.path}${const Uuid().v1()}.m4a';
+    if (await record.hasPermission()) {
+      await record.start(
+        const RecordConfig(),
+        path: path,
+      );
+    }
+  }
+
+  void stopRecord() async {
+    setState(() {
+      isRecording = false;
+    });
+    final path = await record.stop();
+    MessageModel message = MessageModel(
+      message: path!,
+      senderId: FirebaseAuth.instance.currentUser!.uid,
+      receiverId: widget.uid,
+      time: DateTime.now().toString(),
+      isRead: false,
+      messageType: MessageType.audio,
+    );
+    ref.watch(chatControllerProvider).setMessages(
+          context: context,
+          message: message,
+          type: 'audio/m4a'
+        );
+  }
+
   void checkEmptyTextField(String value) {
     if (value.isNotEmpty) {
       setState(() {
@@ -506,5 +535,32 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
         notEmpty = false;
       });
     }
+  }
+
+  Widget send() {
+    if (isRecording) {
+      return outlineIcons(
+          onPressed: () {
+            stopRecord();
+          },
+          context: context,
+          icon: const Icon(Icons.stop));
+    }
+    if (notEmpty) {
+      return outlineIcons(
+        onPressed: () {
+          sendMessage(ref.watch(chatControllerProvider));
+        },
+        icon: const Icon(Icons.send),
+        context: context,
+      );
+    }
+    return outlineIcons(
+      onPressed: () {
+        startRecord();
+      },
+      context: context,
+      icon: const Icon(Icons.mic_outlined),
+    );
   }
 }

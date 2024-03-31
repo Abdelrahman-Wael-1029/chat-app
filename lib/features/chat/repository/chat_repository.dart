@@ -85,9 +85,7 @@ class ChatRepository {
   }
 
   Future<void> sendTextMessage({required context, required message}) async {
-
     await store.runTransaction((transaction) async {
-
       await store
           .collection('users')
           .doc(message.senderId)
@@ -95,7 +93,6 @@ class ChatRepository {
           .doc(message.receiverId)
           .collection('messages')
           .add(message.toJson());
-
 
       await store
           .collection('users')
@@ -133,9 +130,6 @@ class ChatRepository {
       case MessageType.file:
         lastMessage = 'File 📁';
         break;
-      case MessageType.GIF:
-        lastMessage = 'GIF ';
-        break;
     }
     await store
         .collection('users')
@@ -162,6 +156,7 @@ class ChatRepository {
     required context,
     required MessageModel message,
     required file,
+    String? type,
   }) async {
     await store.runTransaction((transaction) async {
       // create new doc id for message
@@ -173,9 +168,12 @@ class ChatRepository {
           .collection('messages')
           .doc()
           .id;
-      String imageUrl = await commonStorageRepositoryProvider.uploadFile(
-          'chat/${message.senderId}/${message.receiverId}/$messageId', file);
-      message.message = imageUrl;
+      String extension = file.path.split('.').last;
+      String fileUrl = await commonStorageRepositoryProvider.uploadFile(
+          'chat/${message.senderId}/${message.receiverId}/$messageId.$extension',
+          file,
+          type: type);
+      message.message = fileUrl;
       sendTextMessage(context: context, message: message);
     });
   }
@@ -183,27 +181,35 @@ class ChatRepository {
   Future<void> setMessages({
     required context,
     required MessageModel message,
+    String? type,
   }) async {
     switch (message.messageType) {
       case MessageType.text:
         if (message.message.isEmpty) return;
-        await sendTextMessage(context: context, message: message);
+        await sendTextMessage(
+          context: context,
+          message: message,
+        );
         break;
       case MessageType.image:
         File file = File(message.message);
-        await sendFileMessage(context: context, message: message, file: file);
+        await sendFileMessage(
+            context: context, message: message, file: file, type: type);
         break;
       case MessageType.video:
         File file = File(message.message);
-        await sendFileMessage(context: context, message: message, file: file);
+        await sendFileMessage(
+            context: context, message: message, file: file, type: type);
         break;
       case MessageType.audio:
+        File file = File(message.message);
+        await sendFileMessage(
+            context: context, message: message, file: file, type: type);
         break;
       case MessageType.file:
         File file = File(message.message);
-        await sendFileMessage(context: context, message: message, file: file);
-        break;
-      case MessageType.GIF:
+        await sendFileMessage(
+            context: context, message: message, file: file, type: type);
         break;
     }
   }

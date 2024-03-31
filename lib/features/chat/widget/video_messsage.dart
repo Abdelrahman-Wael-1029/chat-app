@@ -34,7 +34,6 @@ class _VideoMessageState extends State<VideoMessage> {
       looping: false,
       showControls: true,
       autoInitialize: true,
-
     );
   }
 
