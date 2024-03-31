@@ -12,7 +12,6 @@ class ChatController {
 
   ChatController({required this.chatRepository});
 
-
   Stream<List<MessageModel>> getMessages({
     required String receiverId,
   }) {
@@ -23,10 +22,12 @@ class ChatController {
   Future<void> setMessages({
     required context,
     required MessageModel message,
+    String? type,
   }) async {
     await chatRepository.setMessages(
       context: context,
       message: message,
+      type: type,
     );
   }
 
