@@ -1,6 +1,6 @@
-import 'dart:io';
 import 'dart:math';
 import 'package:chat_app/features/chat/widget/audio_message.dart';
+import 'package:chat_app/features/chat/widget/file_message.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:record/record.dart';
 import 'package:uuid/uuid.dart';
@@ -443,21 +443,10 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
         return AudioMessage(
           message: message,
         );
-        return Text(message.message);
 
       case MessageType.file:
-        return getFileMessage(message);
+        return FileMessage(message: message);
     }
-  }
-
-  Widget getFileMessage(MessageModel message) {
-    File file = File(message.message);
-    return Text(
-      file.path.split('/').last,
-      style: Theme.of(context).textTheme.bodyMedium,
-      maxLines: 10,
-      overflow: TextOverflow.ellipsis,
-    );
   }
 
   Widget otherMessage(context, MessageModel message) {
@@ -518,11 +507,9 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
       isRead: false,
       messageType: MessageType.audio,
     );
-    ref.watch(chatControllerProvider).setMessages(
-          context: context,
-          message: message,
-          type: 'audio/m4a'
-        );
+    ref
+        .watch(chatControllerProvider)
+        .setMessages(context: context, message: message, type: 'audio/m4a');
   }
 
   void checkEmptyTextField(String value) {

@@ -14,6 +14,7 @@ class AudioMessage extends StatefulWidget {
 
 class _AudioMessageState extends State<AudioMessage> {
   AudioPlayer audioPlayer = AudioPlayer();
+  bool isSpeed = false;
   @override
   void initState() {
     super.initState();
@@ -57,9 +58,13 @@ class _AudioMessageState extends State<AudioMessage> {
                   audioPlayer.seek(Duration(seconds: value.toInt()));
                 },
                 min: 0.0,
-                max: (audioPlayer.duration != null)?audioPlayer.duration!.inSeconds.toDouble():0.0,
+                max: (audioPlayer.duration != null)
+                    ? audioPlayer.duration!.inSeconds.toDouble()
+                    : 0.0,
               ),
             ),
+            // time stretching
+            speed(),
             // duration of audio
 
             // Text(
@@ -90,5 +95,26 @@ class _AudioMessageState extends State<AudioMessage> {
         setState(() {});
       }
     });
+  }
+
+  Widget speed() {
+    return (isSpeed)
+        ? IconButton(
+            icon: Icon(Icons.speed),
+            onPressed: () async {
+              isSpeed = false;
+              await audioPlayer.setSpeed(1.0);
+              setState(() {});
+            },
+            color: Theme.of(context).primaryColor,
+          )
+        : IconButton(
+            icon: Icon(Icons.speed),
+            onPressed: () async {
+              isSpeed = true;
+              await audioPlayer.setSpeed(2.0);
+              setState(() {});
+            },
+          );
   }
 }
