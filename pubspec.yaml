@@ -31,6 +31,8 @@ dependencies:
   audioplayers: ^6.0.0
   awesome_dialog: ^3.2.0
   just_audio: ^0.9.37
+  flutter_file_downloader: ^1.2.1
+  open_file_plus: ^3.4.1+1
   cached_network_image: ^3.3.1
   chewie: ^1.7.5
   cloud_firestore: ^4.15.6

@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'dart:math';
 import 'package:chat_app/features/chat/widget/audio_message.dart';
 import 'package:chat_app/features/chat/widget/file_message.dart';
@@ -446,7 +445,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
         );
 
       case MessageType.file:
-        return  FileMessage(message: message);
+        return FileMessage(message: message);
     }
   }
 
@@ -508,11 +507,9 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
       isRead: false,
       messageType: MessageType.audio,
     );
-    ref.watch(chatControllerProvider).setMessages(
-          context: context,
-          message: message,
-          type: 'audio/m4a'
-        );
+    ref
+        .watch(chatControllerProvider)
+        .setMessages(context: context, message: message, type: 'audio/m4a');
   }
 
   void checkEmptyTextField(String value) {
