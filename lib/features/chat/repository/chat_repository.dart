@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:chat_app/common/utils/type_message.dart';
 import '../../../common/repository/common_firebase_storage.dart';
 import '../../../common/utils/show_awesome_dialog.dart';
 import '../../../models/contact.dart';
@@ -113,24 +114,7 @@ class ChatRepository {
   }
 
   Future<void> setLastMessage(message) async {
-    String? lastMessage;
-    switch (message.messageType) {
-      case MessageType.text:
-        lastMessage = message.message;
-        break;
-      case MessageType.image:
-        lastMessage = 'Image 📷';
-        break;
-      case MessageType.video:
-        lastMessage = 'Video 📸';
-        break;
-      case MessageType.audio:
-        lastMessage = 'Audio 🔉';
-        break;
-      case MessageType.file:
-        lastMessage = 'File 📁';
-        break;
-    }
+    String? lastMessage = typeMessage(message);
     await store
         .collection('users')
         .doc(message.senderId)

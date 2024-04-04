@@ -1,3 +1,5 @@
+import 'package:chat_app/models/message_reply.dart';
+
 import '../common/widgets/enum_message.dart';
 
 class MessageModel {
@@ -7,6 +9,7 @@ class MessageModel {
   final String time;
   final bool isRead;
   final MessageType messageType;
+  MessageReplyModel? reply;
 
   MessageModel({
     required this.message,
@@ -15,6 +18,7 @@ class MessageModel {
     required this.time,
     required this.isRead,
     this.messageType = MessageType.text,
+    this.reply,
   });
 
   factory MessageModel.fromJson(Map<String, dynamic> json) {
@@ -27,6 +31,7 @@ class MessageModel {
       messageType: (json['messageType'])  != null
           ? MessageType.values[json['messageType']]
           : MessageType.text,
+      reply: json['reply'] != null ? MessageReplyModel.fromJson(json['reply']) : null,
     );
   }
 
@@ -38,11 +43,12 @@ class MessageModel {
       'time': time,
       'isRead': isRead,
       'messageType': messageType.index,
+      'reply': reply?.toJson(),
     };
   }
 
   @override
   String toString() {
-    return 'MessageModel(message: $message, senderId: $senderId, receiverId: $receiverId, time: $time, isRead: $isRead, messageType: $messageType)';
+    return 'MessageModel(message: $message, senderId: $senderId, receiverId: $receiverId, time: $time, isRead: $isRead, messageType: $messageType , reply: $reply)';
   }
 }

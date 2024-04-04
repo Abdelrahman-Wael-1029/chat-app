@@ -1,6 +1,9 @@
 import 'dart:math';
+import 'package:chat_app/common/utils/show_awesome_dialog.dart';
 import 'package:chat_app/features/chat/widget/audio_message.dart';
 import 'package:chat_app/features/chat/widget/file_message.dart';
+import 'package:chat_app/features/chat/widget/message_reply.dart';
+import 'package:chat_app/models/message_reply.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:record/record.dart';
 import 'package:uuid/uuid.dart';
@@ -51,6 +54,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
   int indexEmojiAdd = 0;
   var record = AudioRecorder();
   bool isRecording = false;
+  MessageReplyModel? messageReplyModel;
 
   @override
   void dispose() {
@@ -164,11 +168,37 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                 shrinkWrap: true,
                 controller: scrollController,
                 itemBuilder: (context, index) {
-                  if (data[index].senderId ==
-                      FirebaseAuth.instance.currentUser!.uid) {
-                    return myMessage(context, data[index]);
-                  }
-                  return otherMessage(context, data[index]);
+                  return Dismissible(
+                    direction: DismissDirection.endToStart,
+                    // max swipe to the left
+                    dismissThresholds: {DismissDirection.endToStart: 0.1},
+                    key: Key(data[index].time),
+                    confirmDismiss: (direction) {
+                      messageReplyModel = MessageReplyModel(
+                        name: data[index].senderId ==
+                                FirebaseAuth.instance.currentUser!.uid
+                            ? 'You'
+                            : widget.name,
+                        message: data[index].message,
+                        isMe: data[index].senderId ==
+                            FirebaseAuth.instance.currentUser!.uid,
+                        messageId: data[index].time,
+                        messageType: data[index].messageType,
+                      );
+                      print(messageReplyModel);
+                      setState(() {});
+                      return Future.value(false);
+                    },
+                    // on forward from start to end
+                    child: Column(
+                      children: [
+                        (data[index].senderId ==
+                                FirebaseAuth.instance.currentUser!.uid)
+                            ? myMessage(context, data[index])
+                            : otherMessage(context, data[index])
+                      ],
+                    ),
+                  );
                 },
                 separatorBuilder: (context, index) {
                   if (index >= data.length - 1 ||
@@ -193,6 +223,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
+              getMessageReply(),
               Row(
                 children: [
                   Expanded(
@@ -255,6 +286,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                                     time: DateTime.now().toString(),
                                     isRead: false,
                                     messageType: MessageType.file,
+                                    reply: messageReplyModel,
                                   ),
                                 );
                               },
@@ -277,6 +309,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                                       time: DateTime.now().toString(),
                                       isRead: false,
                                       messageType: MessageType.video,
+                                      reply: messageReplyModel,
                                     ),
                                   );
                                 }
@@ -297,6 +330,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                                         time: DateTime.now().toString(),
                                         isRead: false,
                                         messageType: MessageType.image,
+                                        reply: messageReplyModel,
                                       ),
                                     );
                                   }
@@ -367,7 +401,11 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
     );
   }
 
-  void sendMessage(chatController) {
+  void sendMessage(chatController){
+
+  }
+
+  void sendTextMessage(chatController) {
     chatController
         .setMessages(
       context: context,
@@ -377,9 +415,11 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
         receiverId: widget.uid,
         time: DateTime.now().toString(),
         isRead: false,
+        reply: messageReplyModel,
       ),
     )
         .then((value) {
+      messageReplyModel = null;
       scrollToEnd();
     });
 
@@ -420,8 +460,12 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                 topStart: Radius.circular(10),
               ),
             ),
-            child: SizedBox(
-              child: getMessage(message),
+            child: Column(
+              children: [
+                if (message.reply != null)
+                  MessageReply(messageReplyModel: message.reply!),
+                getMessage(message),
+              ],
             ),
           ),
         ),
@@ -443,10 +487,24 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
         return AudioMessage(
           message: message,
         );
-
       case MessageType.file:
         return FileMessage(message: message);
     }
+  }
+
+  Widget getMessageReply() {
+    if (messageReplyModel != null) {
+      return Dismissible(
+        key: UniqueKey(),
+        onDismissed: (direction) {
+          setState(() {
+            messageReplyModel = null;
+          });
+        },
+        child: MessageReply(messageReplyModel: messageReplyModel!),
+      );
+    }
+    return const SizedBox();
   }
 
   Widget otherMessage(context, MessageModel message) {
@@ -473,7 +531,14 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                 topEnd: Radius.circular(10),
               ),
             ),
-            child: getMessage(message),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                if (message.reply != null)
+                  MessageReply(messageReplyModel: message.reply!),
+                getMessage(message),
+              ],
+            ),
           ),
         ),
       ],
@@ -506,6 +571,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
       time: DateTime.now().toString(),
       isRead: false,
       messageType: MessageType.audio,
+      reply: messageReplyModel,
     );
     ref
         .watch(chatControllerProvider)
@@ -536,7 +602,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
     if (notEmpty) {
       return outlineIcons(
         onPressed: () {
-          sendMessage(ref.watch(chatControllerProvider));
+          sendTextMessage(ref.watch(chatControllerProvider));
         },
         icon: const Icon(Icons.send),
         context: context,
