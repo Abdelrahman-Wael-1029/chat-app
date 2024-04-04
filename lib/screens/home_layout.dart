@@ -22,7 +22,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-
   }
 
   @override
@@ -51,52 +50,50 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: const Text('Spark'),
-          actions: [
-            IconButton(
-              onPressed: () {
-                ref.read(authControllerProvider).signOut(context);
-              },
-              icon: const Icon(Icons.logout),
-            )
-          ],
-        ),
-        body: StreamBuilder(
-          stream: ref.watch(chatControllerProvider).getContacts(),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            }
-            if (snapshot.hasError) {
-              return const Center(
-                child: Text('An error occurred'),
-              );
-            }
-            return Padding(
-              padding: const EdgeInsetsDirectional.only(start: 5, end: 10),
-              child: ContactsList(
-                data: snapshot.data!,
-                onTapIndex: (index) {
-                  ref
-                      .read(selectContactsControllerProvider)
-                      .selectContact(
-                    context,
-                    snapshot.data![index].id,
-                  );
-                },
-
-              ),
+      appBar: AppBar(
+        title: const Text('Spark'),
+        actions: [
+          IconButton(
+            onPressed: () {
+              ref.read(authControllerProvider).signOut(context);
+            },
+            icon: const Icon(Icons.logout),
+          )
+        ],
+      ),
+      body: StreamBuilder(
+        stream: ref.watch(chatControllerProvider).getContacts(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(
+              child: CircularProgressIndicator(),
             );
-          },
-        ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            Navigator.pushNamed(context, SelectContactsScreen.route);
-          },
-          child: const Icon(Icons.message),
-        ));
+          }
+          if (snapshot.hasError) {
+            return const Center(
+              child: Text('An error occurred'),
+            );
+          }
+          return Padding(
+            padding: const EdgeInsetsDirectional.only(start: 5, end: 10),
+            child: ContactsList(
+              data: snapshot.data!,
+              onTapIndex: (index) {
+                ref.read(selectContactsControllerProvider).selectContact(
+                      context,
+                      snapshot.data![index].id,
+                    );
+              },
+            ),
+          );
+        },
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.pushNamed(context, SelectContactsScreen.route);
+        },
+        child: const Icon(Icons.message),
+      ),
+    );
   }
 }
