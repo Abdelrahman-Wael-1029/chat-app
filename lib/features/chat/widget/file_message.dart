@@ -1,7 +1,8 @@
-import 'dart:io';
+import 'package:chat_app/features/chat/widget/download_file.dart';
 import 'package:chat_app/models/message.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_file_downloader/flutter_file_downloader.dart';
+import 'dart:io' as io;
+
 import 'package:open_file_plus/open_file_plus.dart';
 
 class FileMessage extends StatefulWidget {
@@ -19,22 +20,7 @@ class _FileMessageState extends State<FileMessage> {
   Widget build(BuildContext context) {
     return ElevatedButton(
       onPressed: () async {
-        // downlaod file in 'spark/downloads' directory
-//You can download a single file
-        File? file = await FileDownloader.downloadFile(
-          url: widget.message.message,
-          // name: "THE FILE NAME AFTER DOWNLOADING", //(optional)
-          onProgress: (String? fileName, double progress) {
-            print('FILE fileName HAS PROGRESS $progress');
-          },
-          onDownloadCompleted: (String path) {
-            print('FILE IS NOW AT: $path');
-            OpenFile.open(path);
-          },
-          onDownloadError: (String error) {
-            print('FILE DOWNLOAD ERROR: $error');
-          },
-        );
+        downlaodFile(widget.message.message, true);
       },
       child: const Text('Open File'),
     );
