@@ -1,29 +1,22 @@
 import 'dart:math';
-import 'package:chat_app/common/utils/show_awesome_dialog.dart';
-import 'package:chat_app/features/chat/widget/audio_message.dart';
-import 'package:chat_app/features/chat/widget/file_message.dart';
 import 'package:chat_app/features/chat/widget/message_reply.dart';
+import 'package:chat_app/features/chat/widget/my_message.dart';
+import 'package:chat_app/features/chat/widget/other_message.dart';
 import 'package:chat_app/models/message_reply.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:record/record.dart';
 import 'package:uuid/uuid.dart';
-
 import '../../../common/widgets/error.dart';
-import '../widget/text_message.dart';
-import '../widget/video_messsage.dart';
 import '../../../models/message.dart';
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../../common/widgets/enum_message.dart';
 import '../../../common/widgets/icon.dart';
 import '../../../common/widgets/loading.dart';
-import '../../../styles/colors.dart';
 import '../controller/chat_controller.dart';
-import '../widget/image_message.dart';
 
 // ignore: must_be_immutable
 class ChatScreen extends ConsumerStatefulWidget {
@@ -171,7 +164,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                   return Dismissible(
                     direction: DismissDirection.endToStart,
                     // max swipe to the left
-                    dismissThresholds: {DismissDirection.endToStart: 0.1},
+                    dismissThresholds: const {DismissDirection.endToStart: 0.1},
                     key: Key(data[index].time),
                     confirmDismiss: (direction) {
                       messageReplyModel = MessageReplyModel(
@@ -276,9 +269,9 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                                     await ImagePicker().pickMedia();
                                 if (media == null) return;
                                 // ignore: use_build_context_synchronously
-                                chatController.setMessages(
-                                  context: context,
-                                  message: MessageModel(
+                                sendMessage(
+                                  chatController,
+                                  MessageModel(
                                     message: media.path,
                                     senderId:
                                         FirebaseAuth.instance.currentUser!.uid,
@@ -299,9 +292,9 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                                     .pickVideo(source: ImageSource.gallery);
                                 if (video != null) {
                                   // ignore: use_build_context_synchronously
-                                  chatController.setMessages(
-                                    context: context,
-                                    message: MessageModel(
+                                  sendMessage(
+                                    chatController,
+                                    MessageModel(
                                       message: video.path,
                                       senderId: FirebaseAuth
                                           .instance.currentUser!.uid,
@@ -320,9 +313,9 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                                       .pickImage(source: ImageSource.gallery);
                                   if (photo != null) {
                                     // ignore: use_build_context_synchronously
-                                    chatController.setMessages(
-                                      context: context,
-                                      message: MessageModel(
+                                    sendMessage(
+                                      chatController,
+                                      MessageModel(
                                         message: photo.path,
                                         senderId: FirebaseAuth
                                             .instance.currentUser!.uid,
@@ -401,22 +394,27 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
     );
   }
 
-  void sendMessage(chatController){
-
-  }
-
-  void sendTextMessage(chatController) {
+  void sendMessage(chatController, message) {
+    if (message.messageType == MessageType.text) {
+      sendTextMessage(chatController, message);
+      return;
+    }
     chatController
         .setMessages(
       context: context,
-      message: MessageModel(
-        message: textController.text,
-        senderId: FirebaseAuth.instance.currentUser!.uid,
-        receiverId: widget.uid,
-        time: DateTime.now().toString(),
-        isRead: false,
-        reply: messageReplyModel,
-      ),
+      message: message,
+    )
+        .then((value) {
+      messageReplyModel = null;
+      scrollToEnd();
+    });
+  }
+
+  void sendTextMessage(chatController, message) {
+    chatController
+        .setMessages(
+      context: context,
+      message: message,
     )
         .then((value) {
       messageReplyModel = null;
@@ -435,63 +433,6 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
     );
   }
 
-  Widget myMessage(context, MessageModel message) {
-    var brightness =
-        SchedulerBinding.instance.platformDispatcher.platformBrightness;
-    bool isDarkMode = brightness == Brightness.dark;
-
-    // Select the color based on the theme
-    final containerColor =
-        isDarkMode ? DarkColors.messageColor : LightColors.messageColor;
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.end,
-      children: [
-        Flexible(
-          fit: FlexFit.loose,
-          child: Container(
-            constraints: BoxConstraints(
-                maxWidth: MediaQuery.of(context).size.width * 0.65),
-            padding: const EdgeInsets.all(10),
-            margin: const EdgeInsetsDirectional.only(end: 10),
-            decoration: BoxDecoration(
-              color: containerColor,
-              borderRadius: const BorderRadiusDirectional.only(
-                bottomEnd: Radius.elliptical(10, 5),
-                topStart: Radius.circular(10),
-              ),
-            ),
-            child: Column(
-              children: [
-                if (message.reply != null)
-                  MessageReply(messageReplyModel: message.reply!),
-                getMessage(message),
-              ],
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget getMessage(MessageModel message) {
-    switch (message.messageType) {
-      case MessageType.text:
-        return TextMessage(message: message);
-      case MessageType.image:
-        return ImageMessage(message: message);
-      case MessageType.video:
-        return VideoMessage(
-          message: message,
-        );
-      case MessageType.audio:
-        return AudioMessage(
-          message: message,
-        );
-      case MessageType.file:
-        return FileMessage(message: message);
-    }
-  }
-
   Widget getMessageReply() {
     if (messageReplyModel != null) {
       return Dismissible(
@@ -505,44 +446,6 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
       );
     }
     return const SizedBox();
-  }
-
-  Widget otherMessage(context, MessageModel message) {
-    var brightness =
-        SchedulerBinding.instance.platformDispatcher.platformBrightness;
-    bool isDarkMode = brightness == Brightness.dark;
-    final containerColor = isDarkMode
-        ? DarkColors.senderMessageColor
-        : LightColors.senderMessageColor;
-
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: [
-        Flexible(
-          child: Container(
-            constraints: BoxConstraints(
-                maxWidth: MediaQuery.of(context).size.width * 0.65),
-            padding: const EdgeInsets.all(10),
-            margin: const EdgeInsets.only(left: 10),
-            decoration: BoxDecoration(
-              color: containerColor,
-              borderRadius: const BorderRadiusDirectional.only(
-                bottomStart: Radius.elliptical(5, 10),
-                topEnd: Radius.circular(10),
-              ),
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                if (message.reply != null)
-                  MessageReply(messageReplyModel: message.reply!),
-                getMessage(message),
-              ],
-            ),
-          ),
-        ),
-      ],
-    );
   }
 
   void startRecord() async {
@@ -564,18 +467,18 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
       isRecording = false;
     });
     final path = await record.stop();
-    MessageModel message = MessageModel(
-      message: path!,
-      senderId: FirebaseAuth.instance.currentUser!.uid,
-      receiverId: widget.uid,
-      time: DateTime.now().toString(),
-      isRead: false,
-      messageType: MessageType.audio,
-      reply: messageReplyModel,
+    sendMessage(
+      ref.watch(chatControllerProvider),
+      MessageModel(
+        message: path!,
+        senderId: FirebaseAuth.instance.currentUser!.uid,
+        receiverId: widget.uid,
+        time: DateTime.now().toString(),
+        isRead: false,
+        messageType: MessageType.audio,
+        reply: messageReplyModel,
+      ),
     );
-    ref
-        .watch(chatControllerProvider)
-        .setMessages(context: context, message: message, type: 'audio/m4a');
   }
 
   void checkEmptyTextField(String value) {
@@ -602,7 +505,17 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
     if (notEmpty) {
       return outlineIcons(
         onPressed: () {
-          sendTextMessage(ref.watch(chatControllerProvider));
+          sendMessage(
+            ref.watch(chatControllerProvider),
+            MessageModel(
+              message: textController.text,
+              senderId: FirebaseAuth.instance.currentUser!.uid,
+              receiverId: widget.uid,
+              time: DateTime.now().toString(),
+              isRead: false,
+              reply: messageReplyModel,
+            ),
+          );
         },
         icon: const Icon(Icons.send),
         context: context,

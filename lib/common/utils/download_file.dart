@@ -6,7 +6,6 @@ void downlaodFile(String url, bool openAfterDownload) async {
     url: url,
     onProgress: (String? fileName, double progress) {},
     onDownloadCompleted: (String path) {
-      print(path);
       if (openAfterDownload) OpenFile.open(path);
     },
     onDownloadError: (String error) {},

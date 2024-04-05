@@ -1,4 +1,4 @@
-import 'package:chat_app/features/chat/widget/download_file.dart';
+import 'package:chat_app/common/utils/download_file.dart';
 import 'package:chat_app/models/message.dart';
 import 'package:flutter/material.dart';
 import 'dart:io' as io;
