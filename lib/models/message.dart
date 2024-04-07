@@ -3,7 +3,7 @@ import 'message_reply.dart';
 import '../common/widgets/enum_message.dart';
 
 class MessageModel {
-  String? id;
+  String id;
   String message;
   final String senderId;
   final String receiverId;
@@ -13,7 +13,7 @@ class MessageModel {
   MessageReplyModel? reply;
 
   MessageModel({
-    this.id,
+    required this.id,
     required this.message,
     required this.senderId,
     required this.receiverId,

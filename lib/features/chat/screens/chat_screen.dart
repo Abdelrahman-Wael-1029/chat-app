@@ -281,6 +281,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                                 sendMessage(
                                   chatController,
                                   MessageModel(
+                                    id: Uuid().v1(),
                                     message: media.path,
                                     senderId:
                                         FirebaseAuth.instance.currentUser!.uid,
@@ -304,6 +305,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                                   sendMessage(
                                     chatController,
                                     MessageModel(
+                                      id: Uuid().v1(),
                                       message: video.path,
                                       senderId: FirebaseAuth
                                           .instance.currentUser!.uid,
@@ -325,6 +327,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                                     sendMessage(
                                       chatController,
                                       MessageModel(
+                                        id: Uuid().v1(),
                                         message: photo.path,
                                         senderId: FirebaseAuth
                                             .instance.currentUser!.uid,
@@ -479,6 +482,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
     sendMessage(
       ref.watch(chatControllerProvider),
       MessageModel(
+        id: Uuid().v1(),
         message: path!,
         senderId: FirebaseAuth.instance.currentUser!.uid,
         receiverId: widget.uid,
@@ -517,6 +521,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
           sendMessage(
             ref.watch(chatControllerProvider),
             MessageModel(
+              id: Uuid().v1(),
               message: textController.text,
               senderId: FirebaseAuth.instance.currentUser!.uid,
               receiverId: widget.uid,

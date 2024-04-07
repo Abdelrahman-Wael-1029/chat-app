@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:awesome_dialog/awesome_dialog.dart';
-import 'package:uuid/uuid.dart';
 import '../../../common/utils/type_message.dart';
 import '../../../common/repository/common_firebase_storage.dart';
 import '../../../common/utils/show_awesome_dialog.dart';
@@ -91,7 +90,6 @@ class ChatRepository {
   Future<void> sendTextMessage({required context, required message}) async {
     await store.runTransaction((transaction) async {
       // create new doc id for message.
-      message.id ??= const Uuid().v1();
       await store
           .collection('users')
           .doc(message.senderId)
@@ -185,7 +183,7 @@ class ChatRepository {
     await store.runTransaction((transaction) async {
       // create new doc id for message.
 
-      String messageId = const Uuid().v1();
+      String messageId = message.id;
 
       String extension = file.path.split('.').last;
       String fileUrl = await commonStorageRepositoryProvider.uploadFile(
