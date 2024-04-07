@@ -16,27 +16,25 @@ Widget myMessage(context, MessageModel message) {
   return Row(
     mainAxisAlignment: MainAxisAlignment.end,
     children: [
-      Flexible(
-        fit: FlexFit.loose,
-        child: Container(
-          constraints: BoxConstraints(
-              maxWidth: MediaQuery.of(context).size.width * 0.65),
-          padding: const EdgeInsets.all(10),
-          margin: const EdgeInsetsDirectional.only(end: 10),
-          decoration: BoxDecoration(
-            color: containerColor,
-            borderRadius: const BorderRadiusDirectional.only(
-              bottomEnd: Radius.elliptical(10, 5),
-              topStart: Radius.circular(10),
-            ),
+      Container(
+        constraints: BoxConstraints(
+            maxWidth: MediaQuery.of(context).size.width * 0.65),
+        padding: const EdgeInsets.all(10),
+        margin: const EdgeInsetsDirectional.only(end: 10),
+        decoration: BoxDecoration(
+          color: containerColor,
+          borderRadius: const BorderRadiusDirectional.only(
+            bottomEnd: Radius.elliptical(10, 5),
+            topStart: Radius.circular(10),
           ),
-          child: Column(
-            children: [
-              if (message.reply != null)
-                MessageReply(messageReplyModel: message.reply!),
-              getMessage(message),
-            ],
-          ),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            if (message.reply != null)
+              MessageReply(messageReplyModel: message.reply!),
+            getMessage(message),
+          ],
         ),
       ),
     ],

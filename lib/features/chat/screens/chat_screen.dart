@@ -213,6 +213,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
             bottom: (10 + MediaQuery.of(context).viewInsets.bottom),
           ),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
               getMessageReply(),

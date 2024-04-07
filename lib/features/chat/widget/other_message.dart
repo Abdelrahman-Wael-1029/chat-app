@@ -30,6 +30,7 @@ Widget otherMessage(context, MessageModel message) {
               ),
             ),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
                 if (message.reply != null)
