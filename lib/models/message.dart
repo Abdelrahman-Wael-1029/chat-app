@@ -1,4 +1,4 @@
-import 'package:chat_app/models/message_reply.dart';
+import 'message_reply.dart';
 
 import '../common/widgets/enum_message.dart';
 

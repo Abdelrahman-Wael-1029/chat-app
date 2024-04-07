@@ -1,10 +1,10 @@
-import 'package:chat_app/common/widgets/enum_message.dart';
-import 'package:chat_app/features/chat/widget/audio_message.dart';
-import 'package:chat_app/features/chat/widget/file_message.dart';
-import 'package:chat_app/features/chat/widget/image_message.dart';
-import 'package:chat_app/features/chat/widget/text_message.dart';
-import 'package:chat_app/features/chat/widget/video_messsage.dart';
-import 'package:chat_app/models/message.dart';
+import '../../../common/widgets/enum_message.dart';
+import 'audio_message.dart';
+import 'file_message.dart';
+import 'image_message.dart';
+import 'text_message.dart';
+import 'video_messsage.dart';
+import '../../../models/message.dart';
 import 'package:flutter/material.dart';
 
 Widget getMessage(MessageModel message) {

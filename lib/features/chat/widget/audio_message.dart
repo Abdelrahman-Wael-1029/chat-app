@@ -1,4 +1,4 @@
-import 'package:chat_app/models/message.dart';
+import '../../../models/message.dart';
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:permission_handler/permission_handler.dart';

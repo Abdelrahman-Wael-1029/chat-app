@@ -1,8 +1,8 @@
 import 'dart:math';
-import 'package:chat_app/features/chat/widget/message_reply.dart';
-import 'package:chat_app/features/chat/widget/my_message.dart';
-import 'package:chat_app/features/chat/widget/other_message.dart';
-import 'package:chat_app/models/message_reply.dart';
+import '../widget/message_reply.dart';
+import '../widget/my_message.dart';
+import '../widget/other_message.dart';
+import '../../../models/message_reply.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:record/record.dart';
 import 'package:uuid/uuid.dart';
@@ -178,7 +178,6 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                         messageId: data[index].time,
                         messageType: data[index].messageType,
                       );
-                      print(messageReplyModel);
                       setState(() {});
                       return Future.value(false);
                     },

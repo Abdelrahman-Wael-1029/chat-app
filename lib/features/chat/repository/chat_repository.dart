@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:awesome_dialog/awesome_dialog.dart';
-import 'package:chat_app/common/utils/type_message.dart';
+import '../../../common/utils/type_message.dart';
 import '../../../common/repository/common_firebase_storage.dart';
 import '../../../common/utils/show_awesome_dialog.dart';
 import '../../../models/contact.dart';

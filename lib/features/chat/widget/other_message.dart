@@ -1,7 +1,7 @@
-import 'package:chat_app/features/chat/widget/get_message.dart';
-import 'package:chat_app/features/chat/widget/message_reply.dart';
-import 'package:chat_app/models/message.dart';
-import 'package:chat_app/styles/colors.dart';
+import 'get_message.dart';
+import 'message_reply.dart';
+import '../../../models/message.dart';
+import '../../../styles/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 
