@@ -156,11 +156,20 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
               }
 
               var data = snapshot.data!;
-
               return ListView.separated(
                 shrinkWrap: true,
                 controller: scrollController,
                 itemBuilder: (context, index) {
+                  var message = data[index];
+                  if (message.senderId !=
+                          FirebaseAuth.instance.currentUser!.uid &&
+                      !message.isRead) {
+                    print(message.id);
+                    chatController.setSeenMessage(
+                      context: context,
+                      message: message,
+                    );
+                  }
                   return Dismissible(
                     direction: DismissDirection.endToStart,
                     // max swipe to the left
