@@ -1,4 +1,4 @@
-import 'package:chat_app/common/widgets/enum_message.dart';
+import '../common/widgets/enum_message.dart';
 
 class MessageReplyModel {
   String name;

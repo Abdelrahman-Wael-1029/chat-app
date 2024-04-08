@@ -35,4 +35,14 @@ class ChatController {
     var contacts = chatRepository.getContacts();
     return contacts;
   }
+
+  Future<void> setSeenMessage({
+        required context,
+    required MessageModel message,
+  }) async {
+    await chatRepository.setSeenMessage(
+      context: context,
+      message: message,
+    );
+  }
 }

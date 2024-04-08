@@ -1,5 +1,5 @@
-import 'package:chat_app/common/utils/type_message.dart';
-import 'package:chat_app/models/message_reply.dart';
+import '../../../common/utils/type_message.dart';
+import '../../../models/message_reply.dart';
 import 'package:flutter/material.dart';
 
 class MessageReply extends StatelessWidget{
@@ -18,7 +18,8 @@ class MessageReply extends StatelessWidget{
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        // crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Text(
             messageReplyModel.name,

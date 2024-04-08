@@ -1,8 +1,9 @@
-import 'package:chat_app/models/message_reply.dart';
+import 'message_reply.dart';
 
 import '../common/widgets/enum_message.dart';
 
 class MessageModel {
+  String id;
   String message;
   final String senderId;
   final String receiverId;
@@ -12,6 +13,7 @@ class MessageModel {
   MessageReplyModel? reply;
 
   MessageModel({
+    required this.id,
     required this.message,
     required this.senderId,
     required this.receiverId,
@@ -22,7 +24,9 @@ class MessageModel {
   });
 
   factory MessageModel.fromJson(Map<String, dynamic> json) {
+
     return MessageModel(
+      id: json['id'],
       message: json['message'],
       senderId: json['senderId'],
       receiverId: json['receiverId'],
@@ -37,6 +41,7 @@ class MessageModel {
 
   Map<String, dynamic> toJson() {
     return {
+      'id': id,
       'message': message,
       'senderId': senderId,
       'receiverId': receiverId,
@@ -49,6 +54,6 @@ class MessageModel {
 
   @override
   String toString() {
-    return 'MessageModel(message: $message, senderId: $senderId, receiverId: $receiverId, time: $time, isRead: $isRead, messageType: $messageType , reply: $reply)';
+    return 'MessageModel(id : $id, message: $message, senderId: $senderId, receiverId: $receiverId, time: $time, isRead: $isRead, messageType: $messageType , reply: $reply)';
   }
 }

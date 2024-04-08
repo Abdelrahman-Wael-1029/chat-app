@@ -1,4 +1,4 @@
-import 'package:chat_app/common/widgets/enum_message.dart';
+import '../widgets/enum_message.dart';
 
 String typeMessage(message) {
   switch (message.messageType) {

@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:awesome_dialog/awesome_dialog.dart';
-import 'package:chat_app/common/utils/type_message.dart';
+import '../../../common/utils/type_message.dart';
 import '../../../common/repository/common_firebase_storage.dart';
 import '../../../common/utils/show_awesome_dialog.dart';
 import '../../../models/contact.dart';
@@ -78,8 +78,10 @@ class ChatRepository {
         .orderBy('time')
         .snapshots()
         .listen((event) {
-      final updateMessages =
-          event.docs.map((e) => MessageModel.fromJson(e.data())).toList();
+      List<MessageModel> updateMessages = [];
+      for (var doc in event.docs) {
+        updateMessages.add(MessageModel.fromJson(doc.data()));
+      }
       messages.add(updateMessages);
     });
     return messages.stream;
@@ -87,13 +89,15 @@ class ChatRepository {
 
   Future<void> sendTextMessage({required context, required message}) async {
     await store.runTransaction((transaction) async {
+      // create new doc id for message.
       await store
           .collection('users')
           .doc(message.senderId)
           .collection('chat')
           .doc(message.receiverId)
           .collection('messages')
-          .add(message.toJson());
+          .doc(message.id)
+          .set(message.toJson());
 
       await store
           .collection('users')
@@ -101,7 +105,41 @@ class ChatRepository {
           .collection('chat')
           .doc(message.senderId)
           .collection('messages')
-          .add(message.toJson());
+          .doc(message.id)
+          .set(message.toJson());
+      await setLastMessage(message);
+    }).catchError((e) {
+      showAwesomeDialog(
+        context,
+        dialogType: DialogType.error,
+        title: 'Error2',
+        desc: e.toString(),
+      );
+    });
+  }
+
+  Future<void> setSeenMessage({
+    required context,
+    required MessageModel message,
+  }) async {
+    await store.runTransaction((transaction) async {
+      await store
+          .collection('users')
+          .doc(message.senderId)
+          .collection('chat')
+          .doc(message.receiverId)
+          .collection('messages')
+          .doc(message.id)
+          .update({'isRead': true});
+
+      await store
+          .collection('users')
+          .doc(message.receiverId)
+          .collection('chat')
+          .doc(message.senderId)
+          .collection('messages')
+          .doc(message.id)
+          .update({'isRead': true});
       await setLastMessage(message);
     }).catchError((e) {
       showAwesomeDialog(
@@ -143,21 +181,17 @@ class ChatRepository {
     String? type,
   }) async {
     await store.runTransaction((transaction) async {
-      // create new doc id for message
-      String messageId = store
-          .collection('users')
-          .doc(message.senderId)
-          .collection('chat')
-          .doc(message.receiverId)
-          .collection('messages')
-          .doc()
-          .id;
+      // create new doc id for message.
+
+      String messageId = message.id;
+
       String extension = file.path.split('.').last;
       String fileUrl = await commonStorageRepositoryProvider.uploadFile(
           'chat/${message.senderId}/${message.receiverId}/$messageId.$extension',
           file,
           type: type);
       message.message = fileUrl;
+      message.id = messageId;
       sendTextMessage(context: context, message: message);
     });
   }
