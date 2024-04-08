@@ -17,8 +17,8 @@ Widget myMessage(context, MessageModel message) {
     mainAxisAlignment: MainAxisAlignment.end,
     children: [
       Container(
-        constraints: BoxConstraints(
-            maxWidth: MediaQuery.of(context).size.width * 0.65),
+        constraints:
+            BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.65),
         padding: const EdgeInsets.all(10),
         margin: const EdgeInsetsDirectional.only(end: 10),
         decoration: BoxDecoration(
@@ -30,10 +30,33 @@ Widget myMessage(context, MessageModel message) {
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.end,
+          mainAxisSize: MainAxisSize.min,
           children: [
             if (message.reply != null)
               MessageReply(messageReplyModel: message.reply!),
             getMessage(message),
+            const SizedBox(height: 5),
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  "${DateTime.parse(message.time).hour}:${DateTime.parse(message.time).minute}",
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodySmall!
+                      .copyWith(color: Theme.of(context).primaryColor),
+                ),
+                const SizedBox(width: 5),
+                Icon(
+                  message.isRead ? Icons.done_all : Icons.done,
+                  size: 15,
+                  color: message.isRead
+                      ? Theme.of(context).primaryColor
+                      : Theme.of(context).textTheme.bodySmall!.color,
+                ),
+              ],
+            ),
           ],
         ),
       ),
