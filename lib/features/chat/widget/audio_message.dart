@@ -1,3 +1,5 @@
+import 'package:chat_app/common/widgets/loading.dart';
+
 import '../../../models/message.dart';
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
@@ -24,14 +26,14 @@ class _AudioMessageState extends State<AudioMessage> {
   Widget playing() {
     return (audioPlayer.playing)
         ? IconButton(
-            icon: Icon(Icons.pause),
+            icon: const Icon(Icons.pause),
             onPressed: () async {
               setState(() {});
               await audioPlayer.pause();
             },
           )
         : IconButton(
-            icon: Icon(Icons.play_arrow),
+            icon: const Icon(Icons.play_arrow),
             onPressed: () async {
               setState(() {});
               await audioPlayer.play();
@@ -44,42 +46,42 @@ class _AudioMessageState extends State<AudioMessage> {
     return StreamBuilder<Duration>(
         stream: audioPlayer.positionStream,
         builder: (context, snapshot) {
-          if (!snapshot.hasData || snapshot.data == null) {
-            return CircularProgressIndicator();
+          if (!snapshot.hasData || snapshot.data == null || audioPlayer.duration == null) {
+            return const Loading();
           }
-          return Row(children: [
-            // icon to play audio
-            playing(),
-            // slider to control audio
-            Expanded(
-              child: Slider(
+          return Column(
+            children: [
+              Slider(
                 value: snapshot.data!.inSeconds.toDouble(),
                 onChanged: (value) {
                   audioPlayer.seek(Duration(seconds: value.toInt()));
                 },
                 min: 0.0,
-                max: (audioPlayer.duration != null)
-                    ? audioPlayer.duration!.inSeconds.toDouble()
-                    : 0.0,
+                max: audioPlayer.duration!.inSeconds.toDouble(),
               ),
-            ),
-            // time stretching
-            speed(),
-            // duration of audio
-
-            // Text(
-            //   snapshot.data != null
-            //       ? snapshot.data!.toString().split('.').first
-            //       : '0:00',
-            // ),
-          ]);
+              Row(
+                children: [
+                  // icon to play audio
+                  playing(),
+                  // slider to control audio
+                  // time stretching
+                  speed(),
+                  // duration of audio
+                  Spacer(),
+                  Text(
+                    "${snapshot.data!.inHours}:${snapshot.data!.inMinutes}:${snapshot.data!.inSeconds.remainder(60)}",
+                  ),
+                  
+                ],
+              ),
+            ],
+          );
         });
   }
 
   void loadAudio() async {
     if (await Permission.storage.isGranted) {
       await audioPlayer.setUrl(widget.message.message);
-      await audioPlayer.load();
     } else {
       await Permission.storage.request();
       if (await Permission.storage.isGranted) {
@@ -94,13 +96,14 @@ class _AudioMessageState extends State<AudioMessage> {
         audioPlayer.stop();
         setState(() {});
       }
+      print("positioon::: " + audioPlayer.position.inSeconds.toString());
     });
   }
 
   Widget speed() {
     return (isSpeed)
         ? IconButton(
-            icon: Icon(Icons.speed),
+            icon: const Icon(Icons.speed),
             onPressed: () async {
               isSpeed = false;
               await audioPlayer.setSpeed(1.0);
@@ -109,7 +112,7 @@ class _AudioMessageState extends State<AudioMessage> {
             color: Theme.of(context).primaryColor,
           )
         : IconButton(
-            icon: Icon(Icons.speed),
+            icon: const Icon(Icons.speed),
             onPressed: () async {
               isSpeed = true;
               await audioPlayer.setSpeed(2.0);
