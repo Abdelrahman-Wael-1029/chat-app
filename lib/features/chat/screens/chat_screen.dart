@@ -279,8 +279,8 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                                 if (media == null) return;
                                 // ignore: use_build_context_synchronously
                                 sendMessage(
-                                  chatController,
-                                  MessageModel(
+                                  chatController: chatController,
+                                  message: MessageModel(
                                     id: Uuid().v1(),
                                     message: media.path,
                                     senderId:
@@ -303,8 +303,8 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                                 if (video != null) {
                                   // ignore: use_build_context_synchronously
                                   sendMessage(
-                                    chatController,
-                                    MessageModel(
+                                    chatController: chatController,
+                                    message: MessageModel(
                                       id: Uuid().v1(),
                                       message: video.path,
                                       senderId: FirebaseAuth
@@ -325,8 +325,8 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                                   if (photo != null) {
                                     // ignore: use_build_context_synchronously
                                     sendMessage(
-                                      chatController,
-                                      MessageModel(
+                                      chatController: chatController,
+                                      message: MessageModel(
                                         id: Uuid().v1(),
                                         message: photo.path,
                                         senderId: FirebaseAuth
@@ -406,20 +406,25 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
     );
   }
 
-  void sendMessage(chatController, message) {
+  void sendMessage({
+    required ChatController chatController,
+    required message,
+    type,
+  }) async {
     if (message.messageType == MessageType.text) {
       sendTextMessage(chatController, message);
       return;
     }
-    chatController
-        .setMessages(
+    await chatController.setMessages(
       context: context,
       message: message,
-    )
-        .then((value) {
+      type: type,
+    );
+
+    setState(() {
       messageReplyModel = null;
-      scrollToEnd();
     });
+    scrollToEnd();
   }
 
   void sendTextMessage(chatController, message) {
@@ -480,8 +485,8 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
     });
     final path = await record.stop();
     sendMessage(
-      ref.watch(chatControllerProvider),
-      MessageModel(
+      chatController: ref.watch(chatControllerProvider),
+      message: MessageModel(
         id: Uuid().v1(),
         message: path!,
         senderId: FirebaseAuth.instance.currentUser!.uid,
@@ -491,6 +496,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
         messageType: MessageType.audio,
         reply: messageReplyModel,
       ),
+      type: "audio/m4a",
     );
   }
 
@@ -519,8 +525,8 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
       return outlineIcons(
         onPressed: () {
           sendMessage(
-            ref.watch(chatControllerProvider),
-            MessageModel(
+            chatController: ref.watch(chatControllerProvider),
+            message: MessageModel(
               id: Uuid().v1(),
               message: textController.text,
               senderId: FirebaseAuth.instance.currentUser!.uid,
