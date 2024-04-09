@@ -410,23 +410,21 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
     required ChatController chatController,
     required message,
     type,
-  }) {
+  }) async {
     if (message.messageType == MessageType.text) {
       sendTextMessage(chatController, message);
       return;
     }
-    chatController
-        .setMessages(
+    await chatController.setMessages(
       context: context,
       message: message,
       type: type,
-    )
-        .then((value) {
-      setState(() {
-        messageReplyModel = null;
-      });
-      scrollToEnd();
+    );
+
+    setState(() {
+      messageReplyModel = null;
     });
+    scrollToEnd();
   }
 
   void sendTextMessage(chatController, message) {
