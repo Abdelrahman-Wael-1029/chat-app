@@ -46,7 +46,7 @@ class _AudioMessageState extends State<AudioMessage> {
     return StreamBuilder<Duration>(
         stream: audioPlayer.positionStream,
         builder: (context, snapshot) {
-          if (!snapshot.hasData || snapshot.data == null || audioPlayer.duration == null) {
+          if (!snapshot.hasData || snapshot.data == null) {
             return const Loading();
           }
           return Column(
@@ -57,7 +57,7 @@ class _AudioMessageState extends State<AudioMessage> {
                   audioPlayer.seek(Duration(seconds: value.toInt()));
                 },
                 min: 0.0,
-                max: audioPlayer.duration!.inSeconds.toDouble(),
+                max:audioPlayer.duration != null? audioPlayer.duration!.inSeconds.toDouble(): 0.0,
               ),
               Row(
                 children: [
