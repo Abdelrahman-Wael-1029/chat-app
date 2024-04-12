@@ -57,7 +57,9 @@ class _AudioMessageState extends State<AudioMessage> {
                   audioPlayer.seek(Duration(seconds: value.toInt()));
                 },
                 min: 0.0,
-                max:audioPlayer.duration != null? audioPlayer.duration!.inSeconds.toDouble(): 0.0,
+                max: audioPlayer.duration != null
+                    ? audioPlayer.duration!.inSeconds.toDouble()
+                    : 0.0,
               ),
               Row(
                 children: [
@@ -71,7 +73,6 @@ class _AudioMessageState extends State<AudioMessage> {
                   Text(
                     "${snapshot.data!.inHours}:${snapshot.data!.inMinutes}:${snapshot.data!.inSeconds.remainder(60)}",
                   ),
-                  
                 ],
               ),
             ],
@@ -81,12 +82,15 @@ class _AudioMessageState extends State<AudioMessage> {
 
   void loadAudio() async {
     if (await Permission.storage.isGranted) {
-      await audioPlayer.setUrl(widget.message.message);
+      final audioSource =
+          LockCachingAudioSource(Uri.parse(widget.message.message));
+      await audioPlayer.setAudioSource(audioSource);
     } else {
       await Permission.storage.request();
       if (await Permission.storage.isGranted) {
-        await audioPlayer.setUrl(widget.message.message);
-        await audioPlayer.load();
+        final audioSource =
+            LockCachingAudioSource(Uri.parse(widget.message.message));
+        await audioPlayer.setAudioSource(audioSource);
       }
     }
     audioPlayer.playerStateStream.listen((event) {
