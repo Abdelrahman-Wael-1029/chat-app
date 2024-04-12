@@ -17,10 +17,17 @@ class HomeScreen extends ConsumerStatefulWidget {
 }
 
 class _HomeScreenState extends ConsumerState<HomeScreen>
-    with WidgetsBindingObserver {
+    with WidgetsBindingObserver, SingleTickerProviderStateMixin {
+  late final TabController tabBarController;
+
   @override
   void initState() {
     super.initState();
+    tabBarController = TabController(
+      length: 3,
+      vsync: this,
+      initialIndex: 0,
+    );
     WidgetsBinding.instance.addObserver(this);
   }
 
@@ -51,43 +58,63 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Spark'),
-        actions: [
-          IconButton(
-            onPressed: () {
-              ref.read(authControllerProvider).signOut(context);
-            },
-            icon: const Icon(Icons.logout),
-          )
-        ],
-      ),
-      body: StreamBuilder(
-        stream: ref.watch(chatControllerProvider).getContacts(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          }
-          if (snapshot.hasError) {
-            return const Center(
-              child: Text('An error occurred'),
-            );
-          }
-          return Padding(
-            padding: const EdgeInsetsDirectional.only(start: 5, end: 10),
-            child: ContactsList(
-              data: snapshot.data!,
-              onTapIndex: (index) {
-                ref.read(selectContactsControllerProvider).selectContact(
-                      context,
-                      snapshot.data![index].id,
-                    );
+          title: const Text('Spark'),
+          actions: [
+            IconButton(
+              onPressed: () {
+                ref.read(authControllerProvider).signOut(context);
               },
-            ),
-          );
-        },
-      ),
+              icon: const Icon(Icons.logout),
+            )
+          ],
+          bottom: TabBar(
+            labelColor: Colors.white,
+            indicatorColor: Colors.white,
+            labelStyle: Theme.of(context).textTheme.titleMedium,
+            controller: tabBarController,
+            tabs: const [
+              Tab(
+                text: 'Chats',
+              ),
+              Tab(
+                text: 'Stories',
+              ),
+              Tab(
+                text: 'Calls',
+              ),
+            ],
+          )),
+      body: TabBarView(controller: tabBarController, children: [
+        StreamBuilder(
+          stream: ref.watch(chatControllerProvider).getContacts(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+            if (snapshot.hasError) {
+              return const Center(
+                child: Text('An error occurred'),
+              );
+            }
+            return Padding(
+              padding: const EdgeInsetsDirectional.only(start: 5, end: 10),
+              child: ContactsList(
+                data: snapshot.data!,
+                onTapIndex: (index) {
+                  ref.read(selectContactsControllerProvider).selectContact(
+                        context,
+                        snapshot.data![index].id,
+                      );
+                },
+              ),
+            );
+          },
+        ),
+        const Text("stories"),
+        const Text("calls"),
+      ]),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.pushNamed(context, SelectContactsScreen.route);
