@@ -1,3 +1,8 @@
+import 'dart:io';
+
+import 'package:chat_app/features/stories/screens/confirm_story.dart';
+import 'package:chat_app/features/stories/screens/stories_screen.dart';
+import 'package:image_picker/image_picker.dart';
 import '../features/auth/controller/auth_controller.dart';
 import '../widgets/contacts_list.dart';
 import 'package:flutter/material.dart';
@@ -26,7 +31,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
     tabBarController = TabController(
       length: 3,
       vsync: this,
-      initialIndex: 0,
     );
     WidgetsBinding.instance.addObserver(this);
   }
@@ -51,6 +55,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
+    tabBarController.dispose();
     super.dispose();
   }
 
@@ -58,68 +63,83 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          title: const Text('Spark'),
-          actions: [
-            IconButton(
-              onPressed: () {
-                ref.read(authControllerProvider).signOut(context);
-              },
-              icon: const Icon(Icons.logout),
-            )
+        title: const Text('Spark'),
+        actions: [
+          IconButton(
+            onPressed: () {
+              ref.read(authControllerProvider).signOut(context);
+            },
+            icon: const Icon(Icons.logout),
+          )
+        ],
+        bottom: TabBar(
+          labelColor: Colors.white,
+          indicatorColor: Colors.white,
+          dividerColor: Colors.transparent,
+          labelStyle: Theme.of(context).textTheme.titleMedium,
+          controller: tabBarController,
+          tabs: const [
+            Tab(
+              text: 'Chats',
+            ),
+            Tab(
+              text: 'Stories',
+            ),
+            Tab(
+              text: 'Calls',
+            ),
           ],
-          bottom: TabBar(
-            labelColor: Colors.white,
-            indicatorColor: Colors.white,
-            labelStyle: Theme.of(context).textTheme.titleMedium,
-            controller: tabBarController,
-            tabs: const [
-              Tab(
-                text: 'Chats',
-              ),
-              Tab(
-                text: 'Stories',
-              ),
-              Tab(
-                text: 'Calls',
-              ),
-            ],
-          )),
-      body: TabBarView(controller: tabBarController, children: [
-        StreamBuilder(
-          stream: ref.watch(chatControllerProvider).getContacts(),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            }
-            if (snapshot.hasError) {
-              return const Center(
-                child: Text('An error occurred'),
-              );
-            }
-            return Padding(
-              padding: const EdgeInsetsDirectional.only(start: 5, end: 10),
-              child: ContactsList(
-                data: snapshot.data!,
-                onTapIndex: (index) {
-                  ref.read(selectContactsControllerProvider).selectContact(
-                        context,
-                        snapshot.data![index].id,
-                      );
-                },
-              ),
-            );
-          },
         ),
-        const Text("stories"),
-        const Text("calls"),
-      ]),
+      ),
+      body: TabBarView(
+        controller: tabBarController,
+        children: [
+          StreamBuilder(
+            stream: ref.watch(chatControllerProvider).getContacts(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+              if (snapshot.hasError) {
+                return const Center(
+                  child: Text('An error occurred'),
+                );
+              }
+              return Padding(
+                padding: const EdgeInsetsDirectional.only(start: 5, end: 10),
+                child: ContactsList(
+                  data: snapshot.data!,
+                  onTapIndex: (index) {
+                    ref.read(selectContactsControllerProvider).selectContact(
+                          context,
+                          snapshot.data![index].id,
+                        );
+                  },
+                ),
+              );
+            },
+          ),
+          StoriesScreen(),
+          const Text("calls"),
+        ],
+      ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.pushNamed(context, SelectContactsScreen.route);
+        onPressed: () async {
+          if (tabBarController.index == 0) {
+            Navigator.pushNamed(context, SelectContactsScreen.route);
+          }
+          if (tabBarController.index == 1) {
+            XFile? image =
+                await ImagePicker().pickImage(source: ImageSource.gallery);
+            if (image != null) {
+              Navigator.pushNamed(context, ConfirmStory.route,
+                  arguments: File(image.path));
+            }
+          }
         },
-        child: const Icon(Icons.message),
+        child: const Icon(Icons.add),
       ),
     );
   }
