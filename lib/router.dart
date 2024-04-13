@@ -1,3 +1,9 @@
+import 'dart:io';
+
+import 'package:chat_app/features/stories/screens/confirm_story.dart';
+import 'package:chat_app/features/stories/screens/display_story.dart';
+import 'package:story_view/widgets/story_view.dart';
+
 import 'common/widgets/error.dart';
 import 'features/auth/screens/user_info.dart';
 import 'features/chat/screens/chat_screen.dart';
@@ -40,8 +46,20 @@ class Routers {
                 OTPScreen(verificationId: settings.arguments as String));
       case ShowImage.route:
         return MaterialPageRoute(
+            builder: (context) => ShowImage(src: settings.arguments as String));
+      case ConfirmStory.route:
+        return MaterialPageRoute(
             builder: (context) =>
-                ShowImage(src: settings.arguments as String));
+                ConfirmStory(file: settings.arguments as File));
+      case DisplayStory.route:
+        return MaterialPageRoute(
+          builder: (context) => DisplayStory(
+            controller:
+                (settings.arguments as Map<String, dynamic>)['controller'],
+            images: (settings.arguments as Map<String, dynamic>)['images'],
+          ),
+        );
+
       default:
         return MaterialPageRoute(
             builder: (context) =>

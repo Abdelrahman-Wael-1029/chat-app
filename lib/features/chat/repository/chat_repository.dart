@@ -37,7 +37,7 @@ class ChatRepository {
         .doc(auth.currentUser!.uid)
         .collection('chat')
         .orderBy('time', descending: true)
-        .snapshots()
+        .snapshots()  
         .asyncMap((event) async {
       List<ContactModel> contacts = [];
       for (var doc in event.docs) {
