@@ -14,16 +14,21 @@ class StoriesScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     var storiesController = ref.watch(storiesControllerProvider);
-    print("get stories");
+
     return StreamBuilder(
       stream: storiesController.getStories(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Loading();
+          return const Loading();
         }
+        if(snapshot.hasError){
+          print(snapshot.error);
+          return const Center(child: Text('Something went wrong'),);
+        }
+        print(snapshot.data[0].data());
         return ListView.separated(
           scrollDirection: Axis.horizontal,
-          itemCount: snapshot.data.docs.length,
+          itemCount: snapshot.data.length,
           separatorBuilder: (context, index) {
             return const SizedBox(
               width: 10,
@@ -39,7 +44,7 @@ class StoriesScreen extends ConsumerWidget {
                   arguments: {
                     'controller': storyController,
                     'images': List<StoryItem?>.from(
-                      (snapshot.data.docs[index]['storyImages'] as List)
+                      (snapshot.data[index]['storyImages'] as List)
                           .map((e) {
                         return StoryItem.pageImage(
                           url: e,
@@ -58,10 +63,10 @@ class StoriesScreen extends ConsumerWidget {
                     CircleAvatar(
                       radius: 30,
                       backgroundImage: CachedNetworkImageProvider(
-                          snapshot.data.docs[index]['userImage']),
+                          snapshot.data[index]['userImage']),
                     ),
                     Text(
-                      snapshot.data.docs[index]['userName'],
+                      snapshot.data[index]['userName'],
                       style: Theme.of(context).textTheme.titleSmall,
                     ),
                   ],

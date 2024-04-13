@@ -34,7 +34,7 @@ class StoriesController{
     });
   }
 
-  Stream getStories(){
+  Stream getStories() {
     return storiesRepository.getStories();
   }
 }
