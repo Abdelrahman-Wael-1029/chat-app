@@ -1,4 +1,6 @@
 import 'dart:math';
+import 'package:chat_app/features/call/screens/video_call.dart';
+
 import '../widget/message_reply.dart';
 import '../widget/my_message.dart';
 import '../widget/other_message.dart';
@@ -128,7 +130,11 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
               icon: const Icon(Icons.phone),
             ),
             IconButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.of(context).pushNamed(
+                  VideoCall.route,
+                );
+              },
               icon: const Icon(Icons.videocam),
             ),
             IconButton(

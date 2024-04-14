@@ -1,5 +1,4 @@
-import 'package:chat_app/common/widgets/loading.dart';
-
+import '../../../common/widgets/loading.dart';
 import '../../../models/message.dart';
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
@@ -69,7 +68,7 @@ class _AudioMessageState extends State<AudioMessage> {
                   // time stretching
                   speed(),
                   // duration of audio
-                  Spacer(),
+                  const Spacer(),
                   Text(
                     "${snapshot.data!.inHours}:${snapshot.data!.inMinutes}:${snapshot.data!.inSeconds.remainder(60)}",
                   ),
@@ -100,7 +99,6 @@ class _AudioMessageState extends State<AudioMessage> {
         audioPlayer.stop();
         setState(() {});
       }
-      print("positioon::: " + audioPlayer.position.inSeconds.toString());
     });
   }
 

@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:chat_app/common/widgets/loading.dart';
-import 'package:chat_app/features/stories/controller/stories_controller.dart';
-import 'package:chat_app/features/stories/screens/display_story.dart';
+import '../../../common/widgets/loading.dart';
+import '../controller/stories_controller.dart';
+import 'display_story.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:story_view/controller/story_controller.dart';

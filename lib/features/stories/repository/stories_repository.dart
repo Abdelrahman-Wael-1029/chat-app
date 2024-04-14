@@ -1,6 +1,6 @@
 import 'dart:io';
-import 'package:chat_app/common/repository/common_firebase_storage.dart';
-import 'package:chat_app/models/story_model.dart';
+import '../../../common/repository/common_firebase_storage.dart';
+import '../../../models/story_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_contacts/flutter_contacts.dart';

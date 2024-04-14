@@ -1,17 +1,15 @@
 import 'dart:async';
 import 'dart:io';
-
 import 'package:awesome_dialog/awesome_dialog.dart';
-import '../../../common/utils/type_message.dart';
-import '../../../common/repository/common_firebase_storage.dart';
-import '../../../common/utils/show_awesome_dialog.dart';
-import '../../../models/contact.dart';
-import '../../../models/message.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
+import '../../../common/repository/common_firebase_storage.dart';
+import '../../../common/utils/show_awesome_dialog.dart';
+import '../../../common/utils/type_message.dart';
 import '../../../common/widgets/enum_message.dart';
+import '../../../models/contact.dart';
+import '../../../models/message.dart';
 
 var chatRepositoryProvider = Provider((ref) => ChatRepository(
       store: FirebaseFirestore.instance,
@@ -37,7 +35,7 @@ class ChatRepository {
         .doc(auth.currentUser!.uid)
         .collection('chat')
         .orderBy('time', descending: true)
-        .snapshots()  
+        .snapshots()
         .asyncMap((event) async {
       List<ContactModel> contacts = [];
       for (var doc in event.docs) {
