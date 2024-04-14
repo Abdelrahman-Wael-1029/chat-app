@@ -79,6 +79,8 @@ class _VideoCallState extends State<VideoCall> {
     await engine.release();
   }
 
+  Offset _dragOffset = Offset.zero;
+
   // Create UI with local view and remote view
   @override
   Widget build(BuildContext context) {
@@ -91,20 +93,41 @@ class _VideoCallState extends State<VideoCall> {
           Center(
             child: _remoteVideo(),
           ),
-          Align(
-            alignment: Alignment.topLeft,
-            child: SizedBox(
-              width: 100,
-              height: 150,
-              child: Center(
-                child: _localUserJoined
-                    ? AgoraVideoView(
-                        controller: VideoViewController(
-                          rtcEngine: engine,
-                          canvas: const VideoCanvas(uid: 0),
-                        ),
-                      )
-                    : const Loading(),
+          Positioned(
+            left: _dragOffset.dx,
+            top: _dragOffset.dy,
+            child: GestureDetector(
+              onPanUpdate: (DragUpdateDetails details) {
+                // check not out from screen
+                if (_dragOffset.dx + details.delta.dx < 0 ||
+                    _dragOffset.dy + details.delta.dy < -100) {
+                  return;
+                }
+                if (_dragOffset.dx + details.delta.dx >
+                    MediaQuery.of(context).size.width - 100) {
+                  return;
+                }
+                if (_dragOffset.dy + details.delta.dy >
+                    MediaQuery.of(context).size.height - 150) {
+                  return;
+                }
+                setState(() {
+                  _dragOffset += details.delta;
+                });
+              },
+              child: SizedBox(
+                width: 100,
+                height: 150,
+                child: Center(
+                  child: _localUserJoined
+                      ? AgoraVideoView(
+                          controller: VideoViewController(
+                            rtcEngine: engine,
+                            canvas: const VideoCanvas(uid: 0),
+                          ),
+                        )
+                      : const Loading(),
+                ),
               ),
             ),
           ),
