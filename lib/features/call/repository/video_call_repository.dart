@@ -15,7 +15,8 @@ class VideoCallRepository {
 
   VideoCallRepository({required this.auth, required this.firestore});
 
-  Future<void> makeCall(String reciverId) async {
+  Future<void> makeCall(
+      {required String reciverId, required String senderName}) async {
     final call = firestore.collection('calls').doc(reciverId);
     // check if the call is already made
     final callData = await call.get();
@@ -25,6 +26,7 @@ class VideoCallRepository {
     final senderId = auth.currentUser!.uid;
     await call.set({
       'senderId': senderId,
+      'senderName': senderName,
       'reciverId': reciverId,
       'time': DateTime.now().toString(),
     });
