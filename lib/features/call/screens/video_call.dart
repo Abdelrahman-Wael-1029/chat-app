@@ -73,7 +73,9 @@ class _VideoCallState extends ConsumerState<VideoCall> {
       options: const ChannelMediaOptions(),
     );
 
-    ref.read(videoCallControllerProvider).makeCall(widget.reciverId);
+    ref
+        .read(videoCallControllerProvider)
+        .makeCall(reciverId: widget.reciverId, ref: ref);
   }
 
   @override
@@ -116,17 +118,19 @@ class _VideoCallState extends ConsumerState<VideoCall> {
                   if (_dragOffset.dx + details.delta.dx < 0) {
                     // reset
                     setState(() {
-                      _dragOffset = Offset(0, _dragOffset.dy + details.delta.dy);
+                      _dragOffset =
+                          Offset(0, _dragOffset.dy + details.delta.dy);
                     });
                     return;
                   }
                   if (_dragOffset.dy + details.delta.dy < 0) {
                     setState(() {
-                      _dragOffset = Offset(_dragOffset.dx + details.delta.dx, 0);
+                      _dragOffset =
+                          Offset(_dragOffset.dx + details.delta.dx, 0);
                     });
                     return;
                   }
-      
+
                   if (_dragOffset.dx + details.delta.dx >
                       MediaQuery.of(context).size.width - 100) {
                     setState(() {
