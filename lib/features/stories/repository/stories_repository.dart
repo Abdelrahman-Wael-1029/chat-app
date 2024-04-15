@@ -1,5 +1,5 @@
 import 'dart:io';
-import '../../../common/repository/common_firebase_storage.dart';
+import '../../../common/repository/firebase_storage.dart';
 import '../../../models/story_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';

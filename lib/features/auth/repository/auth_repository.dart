@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:awesome_dialog/awesome_dialog.dart';
-import '../../../common/repository/common_firebase_storage.dart';
+import '../../../common/repository/firebase_storage.dart';
 import '../screens/login.dart';
 import '../../../models/user_model.dart';
 import '../../../screens/home_layout.dart';

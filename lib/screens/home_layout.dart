@@ -1,5 +1,10 @@
 import 'dart:io';
+import 'dart:math';
 
+import 'package:chat_app/common/repository/firebase_token.dart';
+import 'package:chat_app/common/repository/notification_api.dart';
+import 'package:chat_app/features/call/screens/video_call.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import '../features/stories/screens/confirm_story.dart';
 import '../features/stories/screens/stories_screen.dart';
 import 'package:image_picker/image_picker.dart';
@@ -33,6 +38,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
       vsync: this,
     );
     WidgetsBinding.instance.addObserver(this);
+    initToken();
+    listenOnNotification();
   }
 
   @override
@@ -142,5 +149,51 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
         child: const Icon(Icons.add),
       ),
     );
+  }
+
+  void initToken() async {
+    var myToken = await FirebaseMessaging.instance.getToken();
+    ref.read(firebaseTokenProvider).storeToken(myToken!);
+  }
+
+  void showNotification(String reciverId, String senderName) {
+    // check if show this notification or not
+    
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        duration: const Duration(seconds: 5),
+        content: Text('Incoming call from ${senderName}'),
+        action: SnackBarAction(
+          label: 'Answer',
+          onPressed: () {
+            Navigator.pushNamed(context, VideoCall.route,
+                arguments: {'reciverId': reciverId, 'senderName': senderName});
+          },
+        ),
+      ),
+    );
+  }
+
+  void listenOnNotification() {
+    FirebaseMessaging.onMessage.listen((event) {
+      if (event.data['type'] != null && event.data['type'] == 'video_call') {
+        // confirm before redirecting by snackbar
+        showNotification(event.data['reciverId'], event.data['senderName']);
+      }
+    });
+
+    FirebaseMessaging.onMessageOpenedApp.listen((event) {
+      if (event.data['type'] != null && event.data['type'] == 'video_call') {
+        // confirm before redirecting by snackbar
+        showNotification(event.data['reciverId'], event.data['senderName']);
+      }
+    });
+
+    FirebaseMessaging.onBackgroundMessage((event) async {
+      if (event.data['type'] != null && event.data['type'] == 'video_call') {
+        // confirm before redirecting by snackbar
+        showNotification(event.data['reciverId'], event.data['senderName']);
+      }
+    });
   }
 }

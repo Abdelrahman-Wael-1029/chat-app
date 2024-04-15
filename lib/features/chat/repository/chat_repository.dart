@@ -4,7 +4,7 @@ import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../common/repository/common_firebase_storage.dart';
+import '../../../common/repository/firebase_storage.dart';
 import '../../../common/utils/show_awesome_dialog.dart';
 import '../../../common/utils/type_message.dart';
 import '../../../common/widgets/enum_message.dart';

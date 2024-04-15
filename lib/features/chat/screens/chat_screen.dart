@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'package:chat_app/features/auth/controller/auth_controller.dart';
 import '../../call/screens/video_call.dart';
 
 import '../widget/message_reply.dart';
@@ -130,10 +131,15 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
               icon: const Icon(Icons.phone),
             ),
             IconButton(
-              onPressed: () {
+              onPressed: () async{
+                var user = await ref.read(authGetCurrentUserProvider);
+                if (user.value == null) return;
                 Navigator.of(context).pushNamed(
                   VideoCall.route,
-                  arguments: widget.uid ,
+                  arguments: {
+                    'reciverId': widget.uid,
+                    'senderName': user.value!.name,
+                  },
                 );
               },
               icon: const Icon(Icons.videocam),

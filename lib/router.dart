@@ -57,7 +57,13 @@ class Routers {
           ),
         );
       case VideoCall.route:
-        return MaterialPageRoute(builder: (context) => VideoCall(reciverId: settings.arguments as String,));
+        return MaterialPageRoute(
+            builder: (context) => VideoCall(
+                  reciverId: (settings.arguments
+                      as Map<String, dynamic>)['reciverId'],
+                  senderName: (settings.arguments
+                      as Map<String, dynamic>)['senderName'],
+                ));
 
       default:
         return MaterialPageRoute(
