@@ -51,13 +51,19 @@ class StoriesRepository {
       }
       whoCanSee.add('all');
 
+      var createdAts = <DateTime>[];
+      if (oldStory.exists) {
+        createdAts = List<DateTime>.from(oldStory['createdAt'].map((e) => e.toDate()));
+      }
+      createdAts.add(DateTime.now());
+
       var story = StoryModel(
         uid: uid,
         userName: userName,
         phone: phone,
         storyImages: storyImages,
         userImage: userImage,
-        createdAt: DateTime.now(),
+        createdAt: createdAts,
         storyId: storyId,
         whoCanSee: whoCanSee,
       );
@@ -79,12 +85,22 @@ class StoriesRepository {
       }
       var contactsNumbers =
           contacts.map((e) => e.phones[0].number.replaceAll(' ', '')).toList();
-      
+
       contactsNumbers.add(auth.currentUser!.phoneNumber!.replaceAll(' ', ''));
 
       var stories = [];
+      // give last 24 hours stories
       for (var item in e.docs) {
         if (contactsNumbers.contains(item['phone'])) {
+          while (item['createdAt'].length > 0 &&
+              item['createdAt'][0].toDate().compareTo(
+                      DateTime.now().subtract(const Duration(days: 1))) <
+                  0) {
+            item['createdAt'].removeAt(0);
+            item['storyImages'].removeAt(0);
+            item['whoCanSee'].removeAt(0);
+          }
+
           stories.add(item);
         }
       }

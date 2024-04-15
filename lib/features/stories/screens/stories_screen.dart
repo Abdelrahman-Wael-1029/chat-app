@@ -25,7 +25,6 @@ class StoriesScreen extends ConsumerWidget {
           print(snapshot.error);
           return const Center(child: Text('Something went wrong'),);
         }
-        print(snapshot.data[0].data());
         return ListView.separated(
           scrollDirection: Axis.horizontal,
           itemCount: snapshot.data.length,
