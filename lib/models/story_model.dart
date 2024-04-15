@@ -40,7 +40,7 @@ class StoryModel {
       phone: map['phone'],
       storyImages: List<String>.from(map['storyImages']),
       userImage: map['userImage'],
-      createdAt: List<DateTime>.from(map['createdAt']),
+      createdAt: List<DateTime>.from(map['createdAt'].map((e) => e.toDate())),
       whoCanSee: List<String>.from(map['whoCanSee']),
     );
   }

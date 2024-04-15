@@ -53,7 +53,7 @@ class StoriesRepository {
 
       var createdAts = <DateTime>[];
       if (oldStory.exists) {
-        createdAts = List<DateTime>.from(oldStory['createdAt']);
+        createdAts = List<DateTime>.from(oldStory['createdAt'].map((e) => e.toDate()));
       }
       createdAts.add(DateTime.now());
 
