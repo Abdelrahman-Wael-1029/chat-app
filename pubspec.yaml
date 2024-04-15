@@ -28,11 +28,9 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
+  agora_rtc_engine: ^6.3.0
   audioplayers: ^6.0.0
   awesome_dialog: ^3.2.0
-  just_audio: ^0.9.37
-  flutter_file_downloader: ^1.2.1
-  open_file_plus: ^3.4.1+1
   cached_network_image: ^3.3.1
   chewie: ^1.7.5
   cloud_firestore: ^4.15.6
@@ -46,21 +44,19 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_contacts: ^1.1.7+1
+  flutter_file_downloader: ^1.2.1
   flutter_riverpod: ^2.4.10
   image_picker: ^1.0.7
+  just_audio: ^0.9.37
+  open_file_plus: ^3.4.1+1
   path_provider: ^2.1.2
   permission_handler: ^11.3.1
   record: ^5.0.5
-  uuid: ^4.3.3
   story_view: ^0.16.5
+  uuid: ^4.3.3
   video_player: ^2.8.3
 
 dev_dependencies:
-  # The "flutter_lints" package below contains a set of recommended lints to
-  # encourage good coding practices. The lint set provided by the package is
-  # activated in the `analysis_options.yaml` file located at the root of your
-  # package. See that file for information about deactivating specific lint
-  # rules and activating additional ones.
   flutter_lints: ^2.0.0
   flutter_test:
     sdk: flutter

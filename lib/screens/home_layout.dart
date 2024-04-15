@@ -1,7 +1,7 @@
 import 'dart:io';
 
-import 'package:chat_app/features/stories/screens/confirm_story.dart';
-import 'package:chat_app/features/stories/screens/stories_screen.dart';
+import '../features/stories/screens/confirm_story.dart';
+import '../features/stories/screens/stories_screen.dart';
 import 'package:image_picker/image_picker.dart';
 import '../features/auth/controller/auth_controller.dart';
 import '../widgets/contacts_list.dart';

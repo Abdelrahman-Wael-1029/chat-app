@@ -1,7 +1,8 @@
-import '../models/contact.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import '../common/screens/show_image.dart';
+import '../models/contact.dart';
 
 // ignore: must_be_immutable
 class ContactsList extends ConsumerWidget {

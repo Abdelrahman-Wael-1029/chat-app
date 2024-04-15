@@ -1,5 +1,4 @@
 import 'package:flutter/widgets.dart';
-import 'package:story_view/controller/story_controller.dart';
 import 'package:story_view/utils.dart';
 import 'package:story_view/widgets/story_view.dart';
 

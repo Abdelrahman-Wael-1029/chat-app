@@ -1,6 +1,6 @@
 import 'dart:io';
-import 'package:chat_app/features/auth/controller/auth_controller.dart';
-import 'package:chat_app/features/stories/repository/stories_repository.dart';
+import '../../auth/controller/auth_controller.dart';
+import '../repository/stories_repository.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final storiesControllerProvider = Provider((ref) {

@@ -1,9 +1,7 @@
 import 'dart:io';
-
-import 'package:chat_app/features/stories/screens/confirm_story.dart';
-import 'package:chat_app/features/stories/screens/display_story.dart';
-import 'package:story_view/widgets/story_view.dart';
-
+import 'package:chat_app/features/call/screens/video_call.dart';
+import 'features/stories/screens/confirm_story.dart';
+import 'features/stories/screens/display_story.dart';
 import 'common/widgets/error.dart';
 import 'features/auth/screens/user_info.dart';
 import 'features/chat/screens/chat_screen.dart';
@@ -11,7 +9,6 @@ import 'features/landing/screens/landing_screen.dart';
 import 'screens/home_layout.dart';
 import 'common/screens/show_image.dart';
 import 'package:flutter/material.dart';
-
 import 'features/auth/screens/login.dart';
 import 'features/auth/screens/otp.dart';
 import 'features/select_contancts/screens/select_contacts_screen.dart';
@@ -59,6 +56,8 @@ class Routers {
             images: (settings.arguments as Map<String, dynamic>)['images'],
           ),
         );
+      case VideoCall.route:
+        return MaterialPageRoute(builder: (context) => VideoCall(reciverId: settings.arguments as String,));
 
       default:
         return MaterialPageRoute(
