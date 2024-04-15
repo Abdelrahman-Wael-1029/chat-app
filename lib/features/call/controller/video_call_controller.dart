@@ -1,6 +1,5 @@
 import '../../auth/controller/auth_controller.dart';
 import '../repository/video_call_repository.dart';
-import '../../../models/user_model.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final videoCallControllerProvider = Provider(
@@ -16,7 +15,6 @@ class VideoCallController {
 
   Future<void> makeCall({required String reciverId, ref}) async {
     var user = await ref.read(authGetCurrentUserProvider);
-    print("daaaataaa: $user");
     if (user.value == null) return;
     await videoCallRepository.makeCall(
       reciverId: reciverId,

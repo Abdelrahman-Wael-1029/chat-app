@@ -1,4 +1,6 @@
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
+import 'package:chat_app/common/repository/firebase_token.dart';
+import 'package:chat_app/common/repository/notification_api.dart';
 import '../../../common/widgets/loading.dart';
 import '../../../config/agora_config.dart';
 import '../controller/video_call_controller.dart';
@@ -10,7 +12,10 @@ class VideoCall extends ConsumerStatefulWidget {
   static const String route = '/video-call';
   final String reciverId;
 
-  const VideoCall({super.key, required this.reciverId});
+  final senderName;
+
+  const VideoCall(
+      {super.key, required this.reciverId, required this.senderName});
   @override
   ConsumerState<VideoCall> createState() => _VideoCallState();
 }
@@ -24,6 +29,7 @@ class _VideoCallState extends ConsumerState<VideoCall> {
   void initState() {
     super.initState();
     initAgora();
+    sendNotification();
   }
 
   void initAgora() async {
@@ -193,5 +199,20 @@ class _VideoCallState extends ConsumerState<VideoCall> {
         textAlign: TextAlign.center,
       );
     }
+  }
+
+  void sendNotification() async {
+
+    var remoteToken =
+        await ref.read(firebaseTokenProvider).getToken(widget.reciverId);
+    ref.read(notificationApiProvider).sendFcmNotification(
+        token: remoteToken,
+        title: 'Incoming Call form ${widget.senderName}',
+        body: 'You have an incoming video call',
+        data: {
+          'type': 'video_call',
+          'senderName': widget.senderName,
+          'reciverId': widget.reciverId,
+        });
   }
 }
