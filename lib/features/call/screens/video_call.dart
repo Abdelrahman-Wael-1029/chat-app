@@ -1,7 +1,7 @@
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
-import 'package:chat_app/common/widgets/loading.dart';
-import 'package:chat_app/config/agora_config.dart';
-import 'package:chat_app/features/call/controller/video_call_controller.dart';
+import '../../../common/widgets/loading.dart';
+import '../../../config/agora_config.dart';
+import '../controller/video_call_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:permission_handler/permission_handler.dart';

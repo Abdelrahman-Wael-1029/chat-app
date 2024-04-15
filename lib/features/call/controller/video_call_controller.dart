@@ -1,6 +1,6 @@
-import 'package:chat_app/features/auth/controller/auth_controller.dart';
-import 'package:chat_app/features/call/repository/video_call_repository.dart';
-import 'package:chat_app/models/user_model.dart';
+import '../../auth/controller/auth_controller.dart';
+import '../repository/video_call_repository.dart';
+import '../../../models/user_model.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final videoCallControllerProvider = Provider(

@@ -1,6 +1,6 @@
-import '../../../models/contact.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../models/contact.dart';
 import '../repository/select_contacts_repository.dart';
 
 final  getContactsControllerProvider = FutureProvider<List<ContactModel>>((ref) async {

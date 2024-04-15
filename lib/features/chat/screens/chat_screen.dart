@@ -1,5 +1,5 @@
 import 'dart:math';
-import 'package:chat_app/features/call/screens/video_call.dart';
+import '../../call/screens/video_call.dart';
 
 import '../widget/message_reply.dart';
 import '../widget/my_message.dart';

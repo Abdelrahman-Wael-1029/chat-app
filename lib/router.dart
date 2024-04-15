@@ -1,5 +1,5 @@
 import 'dart:io';
-import 'package:chat_app/features/call/screens/video_call.dart';
+import 'features/call/screens/video_call.dart';
 import 'features/stories/screens/confirm_story.dart';
 import 'features/stories/screens/display_story.dart';
 import 'common/widgets/error.dart';
