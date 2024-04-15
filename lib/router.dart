@@ -57,7 +57,7 @@ class Routers {
           ),
         );
       case VideoCall.route:
-        return MaterialPageRoute(builder: (context) => const VideoCall());
+        return MaterialPageRoute(builder: (context) => VideoCall(reciverId: settings.arguments as String,));
 
       default:
         return MaterialPageRoute(

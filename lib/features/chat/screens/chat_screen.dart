@@ -133,6 +133,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
               onPressed: () {
                 Navigator.of(context).pushNamed(
                   VideoCall.route,
+                  arguments: widget.uid ,
                 );
               },
               icon: const Icon(Icons.videocam),

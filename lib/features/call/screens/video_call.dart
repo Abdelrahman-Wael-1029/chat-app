@@ -1,18 +1,21 @@
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 import 'package:chat_app/common/widgets/loading.dart';
 import 'package:chat_app/config/agora_config.dart';
+import 'package:chat_app/features/call/controller/video_call_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-class VideoCall extends StatefulWidget {
+class VideoCall extends ConsumerStatefulWidget {
   static const String route = '/video-call';
+  final String reciverId;
 
-  const VideoCall({super.key});
+  const VideoCall({super.key, required this.reciverId});
   @override
-  State<VideoCall> createState() => _VideoCallState();
+  ConsumerState<VideoCall> createState() => _VideoCallState();
 }
 
-class _VideoCallState extends State<VideoCall> {
+class _VideoCallState extends ConsumerState<VideoCall> {
   int? _remoteUid;
   bool _localUserJoined = false;
   late RtcEngine engine;
@@ -50,6 +53,9 @@ class _VideoCallState extends State<VideoCall> {
           setState(() {
             _remoteUid = null;
           });
+          ref.read(videoCallControllerProvider).endCall(widget.reciverId);
+          _dispose();
+          Navigator.of(context).pop();
         },
         onTokenPrivilegeWillExpire: (RtcConnection connection, String token) {
           debugPrint(
@@ -66,6 +72,8 @@ class _VideoCallState extends State<VideoCall> {
       uid: 0,
       options: const ChannelMediaOptions(),
     );
+
+    ref.read(videoCallControllerProvider).makeCall(widget.reciverId);
   }
 
   @override
@@ -77,6 +85,7 @@ class _VideoCallState extends State<VideoCall> {
   Future<void> _dispose() async {
     await engine.leaveChannel();
     await engine.release();
+    ref.read(videoCallControllerProvider).endCall(widget.reciverId);
   }
 
   Offset _dragOffset = Offset.zero;
@@ -84,54 +93,82 @@ class _VideoCallState extends State<VideoCall> {
   // Create UI with local view and remote view
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Agora Video Call'),
-      ),
-      body: Stack(
-        children: [
-          Center(
-            child: _remoteVideo(),
-          ),
-          Positioned(
-            left: _dragOffset.dx,
-            top: _dragOffset.dy,
-            child: GestureDetector(
-              onPanUpdate: (DragUpdateDetails details) {
-                // check not out from screen
-                if (_dragOffset.dx + details.delta.dx < 0 ||
-                    _dragOffset.dy + details.delta.dy < -100) {
-                  return;
-                }
-                if (_dragOffset.dx + details.delta.dx >
-                    MediaQuery.of(context).size.width - 100) {
-                  return;
-                }
-                if (_dragOffset.dy + details.delta.dy >
-                    MediaQuery.of(context).size.height - 150) {
-                  return;
-                }
-                setState(() {
-                  _dragOffset += details.delta;
-                });
-              },
-              child: SizedBox(
-                width: 100,
-                height: 150,
-                child: Center(
-                  child: _localUserJoined
-                      ? AgoraVideoView(
-                          controller: VideoViewController(
-                            rtcEngine: engine,
-                            canvas: const VideoCanvas(uid: 0),
-                          ),
-                        )
-                      : const Loading(),
+    return PopScope(
+      onPopInvoked: (didPop) {
+        ref.read(videoCallControllerProvider).endCall(widget.reciverId);
+        _dispose();
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Agora Video Call'),
+        ),
+        body: Stack(
+          children: [
+            Center(
+              child: _remoteVideo(),
+            ),
+            Positioned(
+              left: _dragOffset.dx,
+              top: _dragOffset.dy,
+              child: GestureDetector(
+                onPanUpdate: (DragUpdateDetails details) {
+                  // check not out from screen
+                  if (_dragOffset.dx + details.delta.dx < 0) {
+                    // reset
+                    setState(() {
+                      _dragOffset = Offset(0, _dragOffset.dy + details.delta.dy);
+                    });
+                    return;
+                  }
+                  if (_dragOffset.dy + details.delta.dy < 0) {
+                    setState(() {
+                      _dragOffset = Offset(_dragOffset.dx + details.delta.dx, 0);
+                    });
+                    return;
+                  }
+      
+                  if (_dragOffset.dx + details.delta.dx >
+                      MediaQuery.of(context).size.width - 100) {
+                    setState(() {
+                      _dragOffset = Offset(
+                        MediaQuery.of(context).size.width - 100,
+                        _dragOffset.dy + details.delta.dy,
+                      );
+                    });
+                    return;
+                  }
+                  if (_dragOffset.dy + details.delta.dy >
+                      MediaQuery.of(context).size.height - 150) {
+                    setState(() {
+                      _dragOffset = Offset(
+                        _dragOffset.dx + details.delta.dx,
+                        MediaQuery.of(context).size.height - 150,
+                      );
+                    });
+                    return;
+                  }
+                  setState(() {
+                    _dragOffset += details.delta;
+                  });
+                },
+                child: SizedBox(
+                  width: 100,
+                  height: 150,
+                  child: Center(
+                    child: _localUserJoined
+                        ? AgoraVideoView(
+                            controller: VideoViewController(
+                              rtcEngine: engine,
+                              canvas: const VideoCanvas(uid: 0),
+                            ),
+                          )
+                        : const Loading(),
+                  ),
                 ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
