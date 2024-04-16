@@ -88,7 +88,10 @@ class StoriesRepository {
           );
         }
         var contactsNumbers = contacts
-            .map((e) => e.phones[0].number.replaceAll(' ', ''))
+            .map((e) {
+              if(e.phones.isEmpty) return '';
+              return e.phones[0].number.replaceAll(' ', '');
+            })
             .toList();
 
         contactsNumbers.add(auth.currentUser!.phoneNumber!.replaceAll(' ', ''));

@@ -21,8 +21,12 @@ class StoriesScreen extends ConsumerWidget {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Loading();
         }
-        if(snapshot.hasError){
-          return const Center(child: Text('Something went wrong'),);
+
+        if (snapshot.hasError) {
+          print(snapshot.error);
+          return const Center(
+            child: Text('Something went wrong'),
+          );
         }
         return ListView.separated(
           scrollDirection: Axis.horizontal,
@@ -42,8 +46,7 @@ class StoriesScreen extends ConsumerWidget {
                   arguments: {
                     'controller': storyController,
                     'images': List<StoryItem?>.from(
-                      (snapshot.data[index].storyImages)
-                          .map((e) {
+                      (snapshot.data[index].storyImages).map((e) {
                         return StoryItem.pageImage(
                           url: e,
                           controller: storyController,

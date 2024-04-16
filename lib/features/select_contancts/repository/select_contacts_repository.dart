@@ -17,31 +17,37 @@ class SelectContactsRepository {
   SelectContactsRepository({required this.store});
 
   Future<List<ContactModel>> getContacts() async {
-    var users = await store.collection('users').get();
-    List<ContactModel> contacts = [];
+    try {
+      var users = await store.collection('users').get();
+      List<ContactModel> contacts = [];
 
-    if (await FlutterContacts.requestPermission()) {
-      final getContacts = await FlutterContacts.getContacts(
-        withProperties: true,
-        withPhoto: true,
-        sorted: true,
-      );
-      for (var contact in getContacts) {
-        var user = _isFound(contact, users);
-        var myContact = ContactModel(
-          id: contact.id,
-          name: contact.displayName,
-          phone: contact.phones[0].number.replaceAll(' ', ''),
-          image: user != null ? user['image'] : null,
+      if (await FlutterContacts.requestPermission()) {
+        final getContacts = await FlutterContacts.getContacts(
+          withProperties: true,
+          withPhoto: true,
+          sorted: true,
         );
-        if (user != null) {
-          myContact.name = user['name'];
-          myContact.id = user['id'];
+        for (var contact in getContacts) {
+          if(contact.phones.isEmpty) continue;
+          var user = _isFound(contact, users);
+          var myContact = ContactModel(
+            id: contact.id,
+            name: contact.displayName,
+            phone: contact.phones[0].number.replaceAll(' ', ''),
+            image: user != null ? user['image'] : null,
+          );
+          if (user != null) {
+            myContact.name = user['name'];
+            myContact.id = user['id'];
+          }
+          contacts.add(myContact);
         }
-        contacts.add(myContact);
       }
+      return contacts;
+    } catch (e) {
+      print(e);
+      return [];
     }
-    return contacts;
   }
 
   Future<dynamic> selectContact(context, String uid) async {
@@ -57,7 +63,6 @@ class SelectContactsRepository {
             'isOnline': user['isOnline'],
             'uid': user['id'],
           },
-
         );
         return;
       }
@@ -72,12 +77,16 @@ class SelectContactsRepository {
   }
 
   dynamic _isFound(Contact contact, users) {
-    for (var user in users.docs) {
-      if (user['phone'] == contact.phones[0].number.replaceAll(' ', '')) {
-        contact.phones[0].number = user['phone'];
-        return user;
+    try {
+      for (var user in users.docs) {
+        if (user['phone'] == contact.phones[0].number.replaceAll(' ', '')) {
+          contact.phones[0].number = user['phone'];
+          return user;
+        }
       }
+      return null;
+    } catch (e) {
+      print(e);
     }
-    return null;
   }
 }
