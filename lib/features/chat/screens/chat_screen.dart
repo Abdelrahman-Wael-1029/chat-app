@@ -1,5 +1,5 @@
 import 'dart:math';
-import 'package:chat_app/features/auth/controller/auth_controller.dart';
+import '../../auth/controller/auth_controller.dart';
 import '../../call/screens/video_call.dart';
 
 import '../widget/message_reply.dart';

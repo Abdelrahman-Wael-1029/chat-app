@@ -1,9 +1,6 @@
 import 'dart:io';
-import 'dart:math';
-
-import 'package:chat_app/common/repository/firebase_token.dart';
-import 'package:chat_app/common/repository/notification_api.dart';
-import 'package:chat_app/features/call/screens/video_call.dart';
+import '../common/repository/firebase_token.dart';
+import '../features/call/screens/video_call.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import '../features/stories/screens/confirm_story.dart';
 import '../features/stories/screens/stories_screen.dart';
@@ -129,6 +126,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
             },
           ),
           StoriesScreen(),
+          // const Text('stories'),
           const Text("calls"),
         ],
       ),
@@ -158,7 +156,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
 
   void showNotification(String reciverId, String senderName) {
     // check if show this notification or not
-    
+
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         duration: const Duration(seconds: 5),

@@ -1,6 +1,5 @@
 import 'dart:convert';
-
-import 'package:chat_app/env.dart';
+import '../../env.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 

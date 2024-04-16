@@ -1,9 +1,10 @@
-import 'get_message.dart';
-import 'message_reply.dart';
-import '../../../models/message.dart';
-import '../../../styles/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+
+import '../../../models/message.dart';
+import '../../../styles/colors.dart';
+import 'get_message.dart';
+import 'message_reply.dart';
 
 Widget myMessage(context, MessageModel message) {
   var brightness =

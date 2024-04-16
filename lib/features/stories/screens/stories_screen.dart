@@ -21,6 +21,7 @@ class StoriesScreen extends ConsumerWidget {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Loading();
         }
+        print(snapshot.data);
         if(snapshot.hasError){
           print(snapshot.error);
           return const Center(child: Text('Something went wrong'),);
@@ -43,7 +44,7 @@ class StoriesScreen extends ConsumerWidget {
                   arguments: {
                     'controller': storyController,
                     'images': List<StoryItem?>.from(
-                      (snapshot.data[index]['storyImages'] as List)
+                      (snapshot.data[index].storyImages)
                           .map((e) {
                         return StoryItem.pageImage(
                           url: e,
@@ -62,10 +63,10 @@ class StoriesScreen extends ConsumerWidget {
                     CircleAvatar(
                       radius: 30,
                       backgroundImage: CachedNetworkImageProvider(
-                          snapshot.data[index]['userImage']),
+                          snapshot.data[index].userImage),
                     ),
                     Text(
-                      snapshot.data[index]['userName'],
+                      snapshot.data[index].userName,
                       style: Theme.of(context).textTheme.titleSmall,
                     ),
                   ],

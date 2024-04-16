@@ -1,11 +1,13 @@
 import 'dart:io';
-import '../../../common/repository/firebase_storage.dart';
-import '../../../models/story_model.dart';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_contacts/flutter_contacts.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
+
+import '../../../common/repository/firebase_storage.dart';
+import '../../../models/story_model.dart';
 
 final storiesRepositoryProvider = Provider<StoriesRepository>((ref) {
   return StoriesRepository(
@@ -53,7 +55,8 @@ class StoriesRepository {
 
       var createdAts = <DateTime>[];
       if (oldStory.exists) {
-        createdAts = List<DateTime>.from(oldStory['createdAt'].map((e) => e.toDate()));
+        createdAts =
+            List<DateTime>.from(oldStory['createdAt'].map((e) => e.toDate()));
       }
       createdAts.add(DateTime.now());
 
@@ -74,37 +77,58 @@ class StoriesRepository {
   }
 
   Stream getStories() {
-    return firestore.collection('stories').snapshots().asyncMap((e) async {
-      var contacts = [];
+    try {
+      return firestore.collection('stories').snapshots().asyncMap((e) async {
+        var contacts = [];
 
-      if (await FlutterContacts.requestPermission()) {
-        contacts = await FlutterContacts.getContacts(
-          withProperties: true,
-          withThumbnail: false,
-        );
-      }
-      var contactsNumbers =
-          contacts.map((e) => e.phones[0].number.replaceAll(' ', '')).toList();
-
-      contactsNumbers.add(auth.currentUser!.phoneNumber!.replaceAll(' ', ''));
-
-      var stories = [];
-      // give last 24 hours stories
-      for (var item in e.docs) {
-        if (contactsNumbers.contains(item['phone'])) {
-          while (item['createdAt'].length > 0 &&
-              item['createdAt'][0].toDate().compareTo(
-                      DateTime.now().subtract(const Duration(days: 1))) <
-                  0) {
-            item['createdAt'].removeAt(0);
-            item['storyImages'].removeAt(0);
-            item['whoCanSee'].removeAt(0);
-          }
-
-          stories.add(item);
+        if (await FlutterContacts.requestPermission()) {
+          contacts = await FlutterContacts.getContacts(
+            withProperties: true,
+            withThumbnail: false,
+          );
         }
-      }
-      return stories;
-    });
+        var contactsNumbers = contacts
+            .map((e) => e.phones[0].number.replaceAll(' ', ''))
+            .toList();
+
+        contactsNumbers.add(auth.currentUser!.phoneNumber!.replaceAll(' ', ''));
+
+        var stories = [];
+        // give last 24 hours stories
+        for (var item in e.docs) {
+          if (contactsNumbers.contains(item['phone'])) {
+            var allCreatedAt =
+                item['createdAt'].map((e) => e.toDate()).toList();
+            var now = DateTime.now();
+            var last24Hours = now.subtract(Duration(hours: 24));
+
+            var allStories = [];
+            var createdAt = [];
+            var whoCanSee = [];
+            print(allCreatedAt);
+            print(last24Hours);
+            print(allCreatedAt[0].isAfter(last24Hours));
+
+            for (var i = 0; i < allCreatedAt.length; i++) {
+              if (allCreatedAt[i].isAfter(last24Hours)) {
+                allStories.add(item['storyImages'][i]);
+                createdAt.add(item['createdAt'][i].toDate());
+                whoCanSee.add(item['whoCanSee'][i]);
+              }
+            }
+
+            StoryModel storyModel = StoryModel.fromJson(item.data());
+            storyModel.storyImages = List<String>.from(allStories) ;
+            storyModel.createdAt = List<DateTime>.from(createdAt);
+            storyModel.whoCanSee = List<String>.from(whoCanSee);
+            stories.add(storyModel);
+          }
+        }
+        return stories;
+      });
+    } catch (e) {
+      print(e);
+      return Stream.empty();
+    }
   }
 }

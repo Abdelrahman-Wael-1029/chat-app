@@ -1,6 +1,6 @@
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
-import 'package:chat_app/common/repository/firebase_token.dart';
-import 'package:chat_app/common/repository/notification_api.dart';
+import '../../../common/repository/firebase_token.dart';
+import '../../../common/repository/notification_api.dart';
 import '../../../common/widgets/loading.dart';
 import '../../../config/agora_config.dart';
 import '../controller/video_call_controller.dart';
