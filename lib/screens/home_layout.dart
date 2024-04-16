@@ -150,7 +150,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
     ref.read(firebaseTokenProvider).storeToken(myToken!);
   }
 
-  void showNotification(String reciverId, String senderName) {
+  void showVideoCallNotification(String reciverId, String senderName) {
     // check if show this notification or not
 
     ScaffoldMessenger.of(context).showSnackBar(
@@ -172,21 +172,21 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
     FirebaseMessaging.onMessage.listen((event) {
       if (event.data['type'] != null && event.data['type'] == 'video_call') {
         // confirm before redirecting by snackbar
-        showNotification(event.data['reciverId'], event.data['senderName']);
+        showVideoCallNotification(event.data['reciverId'], event.data['senderName']);
       }
     });
 
     FirebaseMessaging.onMessageOpenedApp.listen((event) {
       if (event.data['type'] != null && event.data['type'] == 'video_call') {
         // confirm before redirecting by snackbar
-        showNotification(event.data['reciverId'], event.data['senderName']);
+        showVideoCallNotification(event.data['reciverId'], event.data['senderName']);
       }
     });
 
     FirebaseMessaging.onBackgroundMessage((event) async {
       if (event.data['type'] != null && event.data['type'] == 'video_call') {
         // confirm before redirecting by snackbar
-        showNotification(event.data['reciverId'], event.data['senderName']);
+        showVideoCallNotification(event.data['reciverId'], event.data['senderName']);
       }
     });
   }

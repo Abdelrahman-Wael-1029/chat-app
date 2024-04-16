@@ -47,7 +47,7 @@ class DarkColors {
 
   static Color textColor = const Color.fromRGBO(241, 241, 240, 1);
 
-  static Color messageColor = Colors.deepPurpleAccent;
+  static Color messageColor = const Color.fromARGB(255, 68, 181, 226);
 
   static Color senderMessageColor = const Color(0xff3d3d3d);
 

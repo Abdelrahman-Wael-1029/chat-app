@@ -100,14 +100,11 @@ class StoriesRepository {
             var allCreatedAt =
                 item['createdAt'].map((e) => e.toDate()).toList();
             var now = DateTime.now();
-            var last24Hours = now.subtract(Duration(hours: 24));
+            var last24Hours = now.subtract(const Duration(hours: 24));
 
             var allStories = [];
             var createdAt = [];
             var whoCanSee = [];
-            print(allCreatedAt);
-            print(last24Hours);
-            print(allCreatedAt[0].isAfter(last24Hours));
 
             for (var i = 0; i < allCreatedAt.length; i++) {
               if (allCreatedAt[i].isAfter(last24Hours)) {
@@ -118,10 +115,10 @@ class StoriesRepository {
             }
 
             StoryModel storyModel = StoryModel.fromJson(item.data());
-            storyModel.storyImages = List<String>.from(allStories) ;
+            storyModel.storyImages = List<String>.from(allStories);
             storyModel.createdAt = List<DateTime>.from(createdAt);
             storyModel.whoCanSee = List<String>.from(whoCanSee);
-            stories.add(storyModel);
+            if (storyModel.storyImages.isNotEmpty) stories.add(storyModel);
           }
         }
         return stories;
