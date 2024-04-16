@@ -36,4 +36,10 @@ class VideoCallRepository {
     final call = firestore.collection('calls').doc(reciverId);
     await call.delete();
   }
+
+  Future<bool> checkInCall(String reciverId) async{
+    final call = firestore.collection('calls').doc(reciverId);
+    final callData = await call.get();
+    return callData.exists;
+  }
 }

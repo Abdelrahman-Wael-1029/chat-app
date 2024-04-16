@@ -25,4 +25,8 @@ class VideoCallController {
   Future<void> endCall(String reciverId) async {
     await videoCallRepository.endCall(reciverId);
   }
+
+  Future<bool> checkInCall(String reciverId) async {
+    return await videoCallRepository.checkInCall(reciverId);
+  }
 }

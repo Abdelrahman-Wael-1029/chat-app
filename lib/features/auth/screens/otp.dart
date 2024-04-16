@@ -30,21 +30,24 @@ class OTPScreen extends ConsumerWidget {
                 style: Theme.of(context).textTheme.titleMedium,
               ),
               const SizedBox(height: 20),
-              OtpTextField(
-                numberOfFields: 6,
-                borderColor: Theme.of(context).primaryColor,
-                //set to true to show as box or false to show as dash
-                showFieldAsBox: true,
-                //runs when a code is typed in
-                onCodeChanged: (String code) {},
-                //runs when every textfield is filled
-                onSubmit: (String verificationCode) {
-                  ref.read(authControllerProvider).verifyOTP(
-                        context: context,
-                        verificationId: verificationId,
-                        smsCode: verificationCode,
-                      );
-                }, // end onSubmit
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: OtpTextField(
+                  numberOfFields: 6,
+                  borderColor: Theme.of(context).primaryColor,
+                  //set to true to show as box or false to show as dash
+                  showFieldAsBox: true,
+                  //runs when a code is typed in
+                  onCodeChanged: (String code) {},
+                  //runs when every textfield is filled
+                  onSubmit: (String verificationCode) {
+                    ref.read(authControllerProvider).verifyOTP(
+                          context: context,
+                          verificationId: verificationId,
+                          smsCode: verificationCode,
+                        );
+                  }, // end onSubmit
+                ),
               ),
             ],
           ),

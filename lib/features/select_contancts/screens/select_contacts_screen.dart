@@ -13,6 +13,7 @@ class SelectContactsScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final contacts = ref.watch(getContactsControllerProvider);
+    print(contacts);
 
     return Scaffold(
       appBar: AppBar(
