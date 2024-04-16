@@ -169,7 +169,6 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                   if (message.senderId !=
                           FirebaseAuth.instance.currentUser!.uid &&
                       !message.isRead) {
-                    print(message.id);
                     chatController.setSeenMessage(
                       context: context,
                       message: message,

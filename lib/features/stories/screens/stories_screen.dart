@@ -21,9 +21,7 @@ class StoriesScreen extends ConsumerWidget {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Loading();
         }
-        print(snapshot.data);
         if(snapshot.hasError){
-          print(snapshot.error);
           return const Center(child: Text('Something went wrong'),);
         }
         return ListView.separated(

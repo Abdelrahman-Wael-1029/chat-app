@@ -12,7 +12,6 @@ class NotificationApi {
     required String body,
     required data,
   }) async {
-    print('Sending notification in my class notification api');
     try {
       final url = Uri.parse('https://fcm.googleapis.com/fcm/send');
       final response = await http.post(
@@ -30,12 +29,6 @@ class NotificationApi {
           'to': token,
         }),
       );
-      if (response.statusCode == 200) {
-        print('Notification sent');
-        print(token);
-      } else {
-        print('Failed to send notification');
-      }
     } catch (e) {
       print(e);
     }
