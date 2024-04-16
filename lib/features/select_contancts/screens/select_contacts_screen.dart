@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../common/widgets/loading.dart';
-import '../../../common/widgets/new_contact.dart';
 import '../../../widgets/contacts_list.dart';
 import '../controller/select_contacts_controller.dart';
 
@@ -32,24 +31,6 @@ class SelectContactsScreen extends ConsumerWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
-                NewContact(
-                  title: "New Group",
-                  icon: Icons.groups,
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                NewContact(
-                  title: "New Contact",
-                  icon: Icons.person_add,
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                const Divider(),
-                const SizedBox(
-                  height: 10,
-                ),
                 Text(
                   "Contacts",
                   style: Theme.of(context).textTheme.headlineMedium,

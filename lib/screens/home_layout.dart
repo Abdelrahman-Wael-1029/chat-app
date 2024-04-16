@@ -31,7 +31,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
   void initState() {
     super.initState();
     tabBarController = TabController(
-      length: 3,
+      length: 2,
       vsync: this,
     );
     WidgetsBinding.instance.addObserver(this);
@@ -89,9 +89,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
             Tab(
               text: 'Stories',
             ),
-            Tab(
-              text: 'Calls',
-            ),
+
           ],
         ),
       ),
@@ -126,8 +124,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen>
             },
           ),
           StoriesScreen(),
-          // const Text('stories'),
-          const Text("calls"),
         ],
       ),
       floatingActionButton: FloatingActionButton(

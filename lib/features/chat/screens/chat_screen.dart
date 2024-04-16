@@ -127,10 +127,6 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
           ),
           actions: [
             IconButton(
-              onPressed: () {},
-              icon: const Icon(Icons.phone),
-            ),
-            IconButton(
               onPressed: () async{
                 var user = await ref.read(authGetCurrentUserProvider);
                 if (user.value == null) return;
@@ -143,10 +139,6 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                 );
               },
               icon: const Icon(Icons.videocam),
-            ),
-            IconButton(
-              onPressed: () {},
-              icon: const Icon(Icons.more_vert),
             ),
           ],
         ),
