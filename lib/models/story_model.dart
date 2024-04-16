@@ -44,4 +44,9 @@ class StoryModel {
       whoCanSee: List<String>.from(map['whoCanSee']),
     );
   }
+
+  @override
+  String toString() {
+    return 'StoryModel(uid: $uid, storyId: $storyId, userName: $userName, phone: $phone, storyImages: $storyImages, userImage: $userImage, createdAt: $createdAt, whoCanSee: $whoCanSee)';
+  }
 }
