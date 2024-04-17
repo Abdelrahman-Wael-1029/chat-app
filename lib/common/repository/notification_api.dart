@@ -14,7 +14,7 @@ class NotificationApi {
   }) async {
     try {
       final url = Uri.parse('https://fcm.googleapis.com/fcm/send');
-      final response = await http.post(
+      await http.post(
         url,
         headers: <String, String>{
           'Content-Type': 'application/json',
